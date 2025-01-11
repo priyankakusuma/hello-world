@@ -14,6 +14,59 @@ def test():
 def home(request):
     return render(request, 'home.html')
 
+
+
+def fetch_market_cap(request):
+    symbol = request.GET.get('symbol')
+    if not symbol:
+        return JsonResponse({"success": False, "error": "Symbol not provided."}, status=400)
+
+    # Automatically add .NS to the symbol if it's not already there
+    if not symbol.endswith('.NS'):
+        symbol = f"{symbol}.NS"
+
+    try:
+        # Fetch company data using yfinance
+        company = yf.Ticker(symbol)
+
+        # Get the market capitalization (in the form of a number)
+        market_cap = company.info.get("marketCap")
+        
+        if market_cap is None:
+            return JsonResponse({"success": False, "error": "Market capitalization not available."}, status=404)
+
+        # Return the market cap in INR or as is
+        return JsonResponse({"success": True, "market_cap": market_cap})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+
+
+# Function to fetch market cap for the selected symbol using yfinance
+# def fetch_market_cap(request):
+#     symbol = request.GET.get('symbol')
+#     if not symbol:
+#         return JsonResponse({"success": False, "error": "Symbol not provided."}, status=400)
+
+#     try:
+#         # Fetch company data using yfinance
+#         company = yf.Ticker(symbol)
+
+#         # Get the market capitalization (in the form of a number)
+#         market_cap = company.info.get("marketCap")
+        
+#         if market_cap is None:
+#             return JsonResponse({"success": False, "error": "Market capitalization not available."}, status=404)
+
+#         # Return the market cap in INR or as is
+#         return JsonResponse({"success": True, "market_cap": market_cap})
+
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
 import yfinance as yf
 
 def fetch_stock_price_inr(request):

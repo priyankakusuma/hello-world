@@ -1,13 +1,12 @@
-﻿
-
-
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         /* Your existing styles */
         body {
@@ -44,20 +43,57 @@
         }
 
         .search-container {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally */
+            width: auto; /* Adjust to fit content width */
+            margin: 0 auto;
         }
 
+            /* Updated Search Bar */
             .search-container input {
-                padding: 10px;
+                text-align: center;
+                padding: 12px 16px;
                 width: 300px;
                 margin-bottom: 10px;
+                border-radius: 50px;
+                border: 1px solid #ddd;
             }
 
             .search-container button {
-                padding: 10px;
+                text-align: center;
+                padding: 8px 16px;
+                width: 120px;
+                margin-top: 10px;
+                margin-bottom: 20px;
+                border-radius: 50px;
+                background-color: wheat;
+                color: black;
+                border: none;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
+                .search-container button:hover {
+                    background-color: #0056b3;
+                }
+
+        #ticket, #market-cap-ticket {
+            background-color: yellow;
+            border: 2px solid #ccc;
+            padding: 8px 16px;
+            color: black;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            
+            font-family: Arial, sans-serif;
+        }
+
         #results {
+            
             list-style: none;
             padding: 0;
             margin: 10px auto;
@@ -66,10 +102,11 @@
             overflow-y: auto;
             border: 1px solid #ddd;
             background: #fff;
+            border-radius: 5px;
         }
 
             #results li {
-                padding: 8px;
+                padding: 10px;
                 cursor: pointer;
             }
 
@@ -79,6 +116,7 @@
     </style>
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <header>
         <nav>
             <a href="#">Home</a>
@@ -87,12 +125,20 @@
     </header>
     <main>
         <div class="search-container">
+            <!-- Search bar with icon and new layout -->
             <input type="text" id="search-bar" placeholder="Search...">
-            <button id="create-api-button">Create KPI</button>
 
+            <button id="create-api-button">Create KPIs</button>
+
+            <!-- Market Cap Ticket Placeholder -->
+            <div id="market-cap-ticket" style="display: none;"></div> <!-- Market Cap Ticket -->
+            <!-- Stock Price Ticket Placeholder -->
+            <div id="ticket" style="display: none;"></div> <!-- Stock Price Ticket -->
+            <!-- Search Results -->
             <ul id="results"></ul>
         </div>
     </main>
+
     <script>
         // Handle search input and dynamic filtering
         document.getElementById('search-bar').addEventListener('input', function () {
@@ -138,7 +184,7 @@
         .catch(error => console.error('Error fetching NSE data:', error));
         });
 
-        // Handle "Create API" button click
+        // Handle "Create KPI" button click
         document.getElementById('create-api-button').addEventListener('click', function () {
         const searchValue = document.getElementById('search-bar').value;
         const resultsContainer = document.getElementById('results');
@@ -160,6 +206,7 @@
         if (symbol) {
         console.log(`Fetching price for symbol: ${symbol}`);
 
+        // Fetch stock price
         fetch(`/fetch-stock-price-inr/?symbol=${symbol}`)
         .then(response => response.json())
         .then(data => {
@@ -172,16 +219,29 @@
 
         if (data.success) {
         ticket.style.display = 'block';
-        ticket.innerHTML = `
-        <h3>${searchValue}</h3>
-        <p>Symbol: ${symbol}</p>
-        <p>Current Price: ₹${data.price.toFixed(2)}</p>
-        `;
+        ticket.innerHTML = `<p>Current Price: ₹${data.price.toFixed(2)}</p>`;
         } else {
         alert('Error fetching stock price: ' + data.error);
         }
         })
         .catch(error => console.error('Error fetching stock price:', error));
+
+        // Fetch market cap
+        fetch(`/fetch-market-cap/?symbol=${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+        let marketCapTicket = document.getElementById('market-cap-ticket');
+        if (!marketCapTicket) {
+        marketCapTicket = document.createElement('div');
+        marketCapTicket.id = 'market-cap-ticket';
+        document.querySelector('.search-container').prepend(marketCapTicket);
+        }
+
+        marketCapTicket.style.display = 'block';
+        marketCapTicket.innerHTML = `<p>Market Cap: ₹${data.market_cap.toLocaleString()}</p>`;
+        })
+        .catch(error => console.error('Error fetching market cap:', error));
+
         } else {
         alert('Symbol not found. Please select a company from the list.');
         }
@@ -194,4 +254,5 @@
     </script>
 </body>
 </html>
+
 
