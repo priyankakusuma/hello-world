@@ -1,4 +1,4 @@
-from sqlite3 import Row
+﻿from sqlite3 import Row
 from django.shortcuts import render
 import requests
 import pandas as pd
@@ -13,6 +13,42 @@ def test():
 
 def home(request):
     return render(request, 'home.html')
+
+import yfinance as yf
+
+def fetch_stock_price_inr(request):
+    symbol = request.GET.get('symbol')  # Get the stock symbol from query parameters
+    if not symbol:
+        return JsonResponse({'success': False, 'error': 'Symbol not provided'})
+
+    try:
+        # Ensure the symbol is uppercase
+        symbol = symbol.upper()
+
+        # Check if the symbol is for an Indian stock; append .NS if necessary
+
+        if not symbol.endswith(".NS"):
+            symbol = f"{symbol}.NS"
+
+        # Fetch stock data using yfinance
+        stock = yf.Ticker(symbol)
+        stock_data = stock.history(period="1d")
+        
+        # Log the raw stock data for debugging
+        print(f"Raw stock data for {symbol}: {stock_data}")
+        
+        if stock_data.empty:
+            return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
+        
+        # Extract the closing price in INR (yfinance provides the price in local currency of the stock exchange)
+        stock_price_inr = stock_data['Close'].iloc[-1]
+        print(f"Extracted stock price (INR) for {symbol}: {stock_price_inr}")
+
+        return JsonResponse({'success': True, 'price': round(stock_price_inr, 2)})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Error fetching stock price: {str(e)}"})
+
 
 
 
