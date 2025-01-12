@@ -35,8 +35,16 @@ def fetch_market_cap(request):
         if market_cap is None:
             return JsonResponse({"success": False, "error": "Market capitalization not available."}, status=404)
 
+        # Convert the market cap to crores (₹1 crore = ₹10,000,000)
+        market_cap_in_crores = market_cap / 10**7
+
+        # Format the market cap to 2 decimal places
+        # market_cap_in_crores = round(market_cap_in_crores, 2)
+        # formatted_market_cap = f"{market_cap_in_crores} Crore"
+        formatted_market_cap = f"{market_cap_in_crores:,.2f} Cr"
+
         # Return the market cap in INR or as is
-        return JsonResponse({"success": True, "market_cap": market_cap})
+        return JsonResponse({"success": True, "market_cap":formatted_market_cap})
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
@@ -44,27 +52,6 @@ def fetch_market_cap(request):
 
 
 
-# Function to fetch market cap for the selected symbol using yfinance
-# def fetch_market_cap(request):
-#     symbol = request.GET.get('symbol')
-#     if not symbol:
-#         return JsonResponse({"success": False, "error": "Symbol not provided."}, status=400)
-
-#     try:
-#         # Fetch company data using yfinance
-#         company = yf.Ticker(symbol)
-
-#         # Get the market capitalization (in the form of a number)
-#         market_cap = company.info.get("marketCap")
-        
-#         if market_cap is None:
-#             return JsonResponse({"success": False, "error": "Market capitalization not available."}, status=404)
-
-#         # Return the market cap in INR or as is
-#         return JsonResponse({"success": True, "market_cap": market_cap})
-
-#     except Exception as e:
-#         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
 import yfinance as yf

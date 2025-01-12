@@ -1,0 +1,178 @@
+/* Default (Light Mode) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #343a40;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+}
+
+    .search-bar-container input {
+        width: 300px;
+        margin-right: 10px;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .search-bar-container button {
+        border-radius: 10px;
+        background-color: wheat;
+        color: black;
+        border: none;
+        padding: 8px 16px;
+    }
+
+.toggle-mode {
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    padding: 20px;
+}
+
+.tickets-container {
+    width: 300px;
+    margin-right: 20px;
+}
+
+    .tickets-container .card {
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: yellow; /* Light mode card color */
+        color: black;
+        border-radius: 50px; /* Ensure border radius is applied here */
+    }
+
+
+
+.results-container {
+    flex: 1;
+}
+
+#results {
+    display: none; /* Hide company list */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+    body.dark-mode header {
+        background-color: #1f1f1f;
+    }
+
+    body.dark-mode .card {
+        background-color: wheat; /* Dark mode background color */
+        color: black;
+        border: 1px solid #333;
+        border-radius: 50px; /* Keep the same border radius in dark mode */
+    }
+
+
+
+
+/*body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #343a40;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+}
+
+    .search-bar-container input {
+        width: 300px;
+        margin-right: 10px;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .search-bar-container button {
+        border-radius: 10px;
+        background-color: wheat;
+        color: black;
+        border: none;
+        padding: 8px 16px;
+    }
+
+.toggle-mode {
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    padding: 20px;
+}
+
+.tickets-container {
+    width: 300px;
+    margin-right: 20px;
+}
+
+
+
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: yellow;
+    color: black;
+    border-radius: 50px;  
+}
+
+.results-container {
+    flex: 1;
+}
+
+#results {
+    display: none;*/ /* Hide company list */
+/*}
+
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+    body.dark-mode header {
+        background-color: #1f1f1f;
+    }
+
+    body.dark-mode .card {
+        background-color: wheat;
+        color: black;
+        border: 1px solid #333;
+        border-radius: 50px;
+    }*/

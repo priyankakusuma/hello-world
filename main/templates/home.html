@@ -1,146 +1,52 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        /* Your existing styles */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #f4f4f4;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        nav {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-        }
-
-            nav a {
-                text-decoration: none;
-                color: #333;
-                font-weight: bold;
-            }
-
-        main {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 50px);
-        }
-
-        .search-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center horizontally */
-            width: auto; /* Adjust to fit content width */
-            margin: 0 auto;
-        }
-
-            /* Updated Search Bar */
-            .search-container input {
-                text-align: center;
-                padding: 12px 16px;
-                width: 300px;
-                margin-bottom: 10px;
-                border-radius: 50px;
-                border: 1px solid #ddd;
-            }
-
-            .search-container button {
-                text-align: center;
-                padding: 8px 16px;
-                width: 120px;
-                margin-top: 10px;
-                margin-bottom: 20px;
-                border-radius: 50px;
-                background-color: wheat;
-                color: black;
-                border: none;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-                .search-container button:hover {
-                    background-color: #0056b3;
-                }
-
-        #ticket, #market-cap-ticket {
-            background-color: yellow;
-            border: 2px solid #ccc;
-            padding: 8px 16px;
-            color: black;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-            
-            font-family: Arial, sans-serif;
-        }
-
-        #results {
-            
-            list-style: none;
-            padding: 0;
-            margin: 10px auto;
-            width: 300px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 5px;
-        }
-
-            #results li {
-                padding: 10px;
-                cursor: pointer;
-            }
-
-                #results li:hover {
-                    background-color: #f0f0f0;
-                }
-    </style>
+    <title>Stock KPI Dashboard</title>
+    {% load static %}
+    
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <header>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
-    <main>
-        <div class="search-container">
-            <!-- Search bar with icon and new layout -->
+        <a href="#" class="text-white">Home</a>
+        <div class="search-bar-container">
             <input type="text" id="search-bar" placeholder="Search...">
-
             <button id="create-api-button">Create KPIs</button>
-
-            <!-- Market Cap Ticket Placeholder -->
-            <div id="market-cap-ticket" style="display: none;"></div> <!-- Market Cap Ticket -->
-            <!-- Stock Price Ticket Placeholder -->
-            <div id="ticket" style="display: none;"></div> <!-- Stock Price Ticket -->
-            <!-- Search Results -->
+        </div>
+        <i class="bi bi-moon-fill toggle-mode text-white"></i>
+    </header>
+    <div class="content">
+        <div class="tickets-container">
+            <!-- Tickets Section -->
+            <div id="ticket" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">Current Stock Price</h5>
+                    <p id="stock-price">₹0.00</p>
+                </div>
+            </div>
+            <div id="market-cap-ticket" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">Market Cap</h5>
+                    <p id="market-cap-value">₹0</p>
+                </div>
+            </div>
+        </div>
+        <div class="results-container">
             <ul id="results"></ul>
         </div>
-    </main>
-
+    </div>
     <script>
-        // Handle search input and dynamic filtering
+        // Dark/Light Mode Toggle
+        document.querySelector('.toggle-mode').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        });
+
+        // Handle Search Input
         document.getElementById('search-bar').addEventListener('input', function () {
         const searchQuery = this.value.toLowerCase();
         fetch('/fetch-nse-data/')
@@ -165,17 +71,16 @@
         const li = document.createElement('li');
         li.textContent = `${company.name} : ${company.symbol}`;
         li.addEventListener('click', () => {
-        // Update the search bar value in the correct format
         document.getElementById('search-bar').value = company.name;
-        resultsContainer.innerHTML = ''; // Clear results
+        resultsContainer.style.display = 'none'; // Hide the list
         });
         resultsContainer.appendChild(li);
         });
 
-        if (filteredCompanies.length === 0) {
-        const noResults = document.createElement('li');
-        noResults.textContent = "No companies found";
-        resultsContainer.appendChild(noResults);
+        if (filteredCompanies.length > 0) {
+        resultsContainer.style.display = 'block'; // Show the list if matches found
+        } else {
+        resultsContainer.style.display = 'none'; // Hide the list if no matches
         }
         } else {
         alert('Failed to fetch data: ' + data.error);
@@ -184,72 +89,41 @@
         .catch(error => console.error('Error fetching NSE data:', error));
         });
 
-        // Handle "Create KPI" button click
+        // Handle "Create KPI" Button Click
         document.getElementById('create-api-button').addEventListener('click', function () {
         const searchValue = document.getElementById('search-bar').value;
-        const resultsContainer = document.getElementById('results');
 
-        // Ensure we have a selected company
         if (!searchValue) {
         alert('Please select a company from the list.');
         return;
         }
 
-        // Fetch the symbol from the filtered data based on the name
         fetch('/fetch-nse-data/')
         .then(response => response.json())
         .then(data => {
         if (data.success) {
         const companies = data.data;
-        const symbol = companies[searchValue]; // Get the symbol based on the name
+        const symbol = companies[searchValue];
 
         if (symbol) {
-        console.log(`Fetching price for symbol: ${symbol}`);
-
-        // Fetch stock price
         fetch(`/fetch-stock-price-inr/?symbol=${symbol}`)
         .then(response => response.json())
         .then(data => {
-        let ticket = document.getElementById('ticket');
-        if (!ticket) {
-        ticket = document.createElement('div');
-        ticket.id = 'ticket';
-        document.querySelector('.search-container').prepend(ticket);
-        }
+        const ticket = document.getElementById('ticket');
+        ticket.classList.remove('d-none');
+        document.getElementById('stock-price').textContent = `₹${data.price.toFixed(2)}`;
+        });
 
-        if (data.success) {
-        ticket.style.display = 'block';
-        ticket.innerHTML = `<p>Current Price: ₹${data.price.toFixed(2)}</p>`;
-        } else {
-        alert('Error fetching stock price: ' + data.error);
-        }
-        })
-        .catch(error => console.error('Error fetching stock price:', error));
-
-        // Fetch market cap
         fetch(`/fetch-market-cap/?symbol=${symbol}`)
         .then(response => response.json())
         .then(data => {
-        let marketCapTicket = document.getElementById('market-cap-ticket');
-        if (!marketCapTicket) {
-        marketCapTicket = document.createElement('div');
-        marketCapTicket.id = 'market-cap-ticket';
-        document.querySelector('.search-container').prepend(marketCapTicket);
+        const marketCapTicket = document.getElementById('market-cap-ticket');
+        marketCapTicket.classList.remove('d-none');
+        document.getElementById('market-cap-value').textContent = `₹${data.market_cap.toLocaleString()}`;
+        });
         }
-
-        marketCapTicket.style.display = 'block';
-        marketCapTicket.innerHTML = `<p>Market Cap: ₹${data.market_cap.toLocaleString()}</p>`;
-        })
-        .catch(error => console.error('Error fetching market cap:', error));
-
-        } else {
-        alert('Symbol not found. Please select a company from the list.');
         }
-        } else {
-        alert('Failed to fetch companies: ' + data.error);
-        }
-        })
-        .catch(error => console.error('Error fetching NSE data:', error));
+        });
         });
     </script>
 </body>
