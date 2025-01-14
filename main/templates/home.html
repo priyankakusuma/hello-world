@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock KPI Dashboard</title>
     {% load static %}
-    
+
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  
 </head>
-<body>
-    <header>
+<body data-bs-theme="light">
+    <header class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
         <a href="#" class="text-white">Home</a>
-        <div class="search-bar-container">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <button id="create-api-button">Create KPIs</button>
+        <div class="d-flex justify-content-center align-items-center w-100">
+            <div class="search-bar-container">
+                <input type="text" id="search-bar" placeholder="Search...">
+                <button id="create-api-button">Create KPIs</button>
+            </div>
         </div>
-        <i class="bi bi-moon-fill toggle-mode text-white"></i>
+        <i class="bi bi-moon-fill toggle-mode text-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle Dark Mode"></i>
     </header>
     <div class="content">
         <div class="tickets-container">
@@ -35,15 +36,43 @@
                     <p id="market-cap-value">₹0</p>
                 </div>
             </div>
+            <!-- New Tickets for 52-Week High and Low -->
+            <div id="ticket-52-week-high" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">52-Week High</h5>
+                    <p id="high-52-week">₹0.00</p>
+                    <p id="high-percentage-diff"></p>
+                </div>
+            </div>
+            <div id="ticket-52-week-low" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">52-Week Low</h5>
+                    <p id="low-52-week">₹0.00</p>
+                    <p id="low-percentage-diff"></p>
+                </div>
+            </div>
         </div>
         <div class="results-container">
             <ul id="results"></ul>
         </div>
     </div>
+
     <script>
-        // Dark/Light Mode Toggle
-        document.querySelector('.toggle-mode').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
+        // Dark/Light Mode Toggle using Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.toggle-mode'); // The moon icon
+        const body = document.querySelector('body');
+        toggleButton.addEventListener('click', function() {
+        const currentTheme = body.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        body.setAttribute('data-bs-theme', newTheme); // Toggle theme
+        });
+
+        // Enable Bootstrap tooltips (for icon hover hint)
+        var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
         });
 
         // Handle Search Input
@@ -106,20 +135,83 @@
         const symbol = companies[searchValue];
 
         if (symbol) {
-        fetch(`/fetch-stock-price-inr/?symbol=${symbol}`)
+        // Fetch Stock Data including 52-Week High and Low
+        fetch(`/fetch-stock-data/?symbol=${symbol}`)
         .then(response => response.json())
         .then(data => {
+        if (data.success) {
+        // Display Current Stock Price
         const ticket = document.getElementById('ticket');
         ticket.classList.remove('d-none');
-        document.getElementById('stock-price').textContent = `₹${data.price.toFixed(2)}`;
-        });
+        document.getElementById('stock-price').textContent = `₹${data.current_price.toFixed(2)}`;
 
+        // Display Market Cap
         fetch(`/fetch-market-cap/?symbol=${symbol}`)
         .then(response => response.json())
         .then(data => {
         const marketCapTicket = document.getElementById('market-cap-ticket');
         marketCapTicket.classList.remove('d-none');
         document.getElementById('market-cap-value').textContent = `₹${data.market_cap.toLocaleString()}`;
+        });
+
+        // Display 52-Week High
+        const highTicket = document.getElementById('ticket-52-week-high');
+        highTicket.classList.remove('d-none');
+        document.getElementById('high-52-week').textContent = `₹${data.high_52_week}`;
+        const currentPrice = parseFloat(document.getElementById('stock-price').textContent.replace('₹', ''));
+        const highPercentageDiff = ((data.high_52_week - currentPrice) / data.high_52_week) * 100;
+        document.getElementById('high-percentage-diff').textContent = `${highPercentageDiff.toFixed(2)}% far from current price`;
+
+
+        // Function to calculate color for high percentage difference (reverse of 52-week low)
+        const getColorForHighPercentage = (percentage) => {
+        let h = percentage <= 50 ? 0 : 120;  // Red for 0-50%, Green for 51-100%
+        let l = 50;
+
+        if (percentage <= 15) l = 25;                   // Darkest red
+        else if (percentage <= 25) l = 35;              // Lighter red
+        else if (percentage <= 35) l = 45;
+        else if (percentage <= 45) l = 50;                                               // Lighter red
+        else if (percentage <= 50) l = 60;              // Lighter red
+        else if (percentage <= 65) l = 50 + (percentage - 50) * 0.6; // Lighter green
+        else if (percentage <= 75) l = 60 + (percentage - 65) * 0.5; // Lighter green
+        else if (percentage <= 85) l = 70 + (percentage - 75) * 0.3; // Lighter green
+        else l = 15;                                     // Darkest green
+
+        return `hsl(${h}, 100%, ${l}%)`;
+        };
+
+        // Change color for high percentage difference
+        highTicket.style.backgroundColor = getColorForHighPercentage(highPercentageDiff);
+
+        // Display 52-Week Low
+        const lowTicket = document.getElementById('ticket-52-week-low');
+        lowTicket.classList.remove('d-none');
+        document.getElementById('low-52-week').textContent = `₹${data.low_52_week}`;
+        const lowPercentageDiff = (( currentPrice - data.low_52_week) / currentPrice) * 100;
+        document.getElementById('low-percentage-diff').textContent = `${lowPercentageDiff.toFixed(2)}% far from current price`;
+
+        // Color transition logic for 52-week low
+        const getColorForPercentage = (percentage) => {
+        let h = percentage <= 50 ? 120 : 0;  // Green for 0-50%, Red for 51-100%
+        let l = 50;
+
+        if (percentage <= 15) l = 15;                   // Darkest green
+        else if (percentage <= 25) l = 20;              // Lighter green
+        else if (percentage <= 35) l = 30;
+        else if (percentage <= 45) l = 40;                                               // Lighter green
+        else if (percentage <= 50) l = 45;              // Lighter green
+        else if (percentage <= 65) l = 50 + (percentage - 50) * 0.6; // Lighter red
+        else if (percentage <= 75) l = 60 + (percentage - 65) * 0.5; // Lighter red
+        else if (percentage <= 85) l = 70 + (percentage - 75) * 0.3; // Lighter red
+        else l = 80;                                     // Darkest red
+
+        return `hsl(${h}, 100%, ${l}%)`;
+        };
+
+        // Apply color to low ticket based on percentage difference
+        lowTicket.style.backgroundColor = getColorForPercentage(lowPercentageDiff);
+        }
         });
         }
         }
@@ -130,3 +222,219 @@
 </html>
 
 
+
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock KPI Dashboard</title>
+    {% load static %}
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<body>
+    <header>
+        <a href="#" class="text-white">Home</a>
+        <div class="search-bar-container">
+            <input type="text" id="search-bar" placeholder="Search...">
+            <button id="create-api-button">Create KPIs</button>
+        </div>
+        <i class="bi bi-moon-fill toggle-mode text-white"></i>
+    </header>
+    <div class="content">
+        <div class="tickets-container">-->
+<!-- Tickets Section -->
+<!--<div id="ticket" class="card d-none">
+    <div class="card-body">
+        <h5 class="card-title">Current Stock Price</h5>
+        <p id="stock-price">₹0.00</p>
+    </div>
+</div>
+<div id="market-cap-ticket" class="card d-none">
+    <div class="card-body">
+        <h5 class="card-title">Market Cap</h5>
+        <p id="market-cap-value">₹0</p>
+    </div>
+</div>-->
+<!-- New Tickets for 52-Week High and Low -->
+<!--<div id="ticket-52-week-high" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">52-Week High</h5>
+                    <p id="high-52-week">₹0.00</p>
+                    <p id="high-percentage-diff"></p>
+                </div>
+            </div>
+            <div id="ticket-52-week-low" class="card d-none">
+                <div class="card-body">
+                    <h5 class="card-title">52-Week Low</h5>
+                    <p id="low-52-week">₹0.00</p>
+                    <p id="low-percentage-diff"></p>
+                </div>
+            </div>
+        </div>
+        <div class="results-container">
+            <ul id="results"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Dark/Light Mode Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.querySelector('.toggle-mode'); // The moon icon
+        toggleButton.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode'); // Toggle dark mode on the body
+        updateIcon(); // Update the icon to reflect the theme
+        });
+        function updateIcon() {
+        if (document.body.classList.contains('dark-mode')) {
+            toggleButton.classList.remove('bi-moon-fill');
+            toggleButton.classList.add('bi-sun-fill'); // Change to sun icon for dark mode
+        } else {
+            toggleButton.classList.remove('bi-sun-fill');
+            toggleButton.classList.add('bi-moon-fill'); // Change back to moon icon for light mode
+        }
+        }
+
+        // Initially set the icon based on the theme
+        updateIcon();
+        });
+
+
+        // Handle Search Input
+        document.getElementById('search-bar').addEventListener('input', function () {
+        const searchQuery = this.value.toLowerCase();
+        fetch('/fetch-nse-data/')
+        .then(response => response.json())
+        .then(data => {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
+
+        if (data.success) {
+        const companies = data.data;
+        const filteredCompanies = Object.keys(companies)
+        .filter(name => {
+
+        const symbol = companies[name];
+        return name.toLowerCase().startsWith(searchQuery) || symbol.toLowerCase().startsWith(searchQuery);
+        })
+        .map(name => ({
+        name: name,
+        symbol: companies[name]
+        }));
+
+        filteredCompanies.forEach(company => {
+        const li = document.createElement('li');
+        li.textContent = `${company.name} : ${company.symbol}`;
+        li.addEventListener('click', () => {
+        document.getElementById('search-bar').value = company.name;
+        resultsContainer.style.display = 'none'; // Hide the list
+        });
+        resultsContainer.appendChild(li);
+        });
+
+        if (filteredCompanies.length > 0) {
+        resultsContainer.style.display = 'block'; // Show the list if matches found
+        } else {
+        resultsContainer.style.display = 'none'; // Hide the list if no matches
+        }
+        } else {
+        alert('Failed to fetch data: ' + data.error);
+        }
+        })
+        .catch(error => console.error('Error fetching NSE data:', error));
+        });
+
+        // Handle "Create KPI" Button Click
+        document.getElementById('create-api-button').addEventListener('click', function () {
+        const searchValue = document.getElementById('search-bar').value;
+
+        if (!searchValue) {
+        alert('Please select a company from the list.');
+        return;
+        }
+
+        fetch('/fetch-nse-data/')
+        .then(response => response.json())
+        .then(data => {
+        if (data.success) {
+        const companies = data.data;
+        const symbol = companies[searchValue];
+
+        if (symbol) {
+        // Fetch Stock Data including 52-Week High and Low
+        fetch(`/fetch-stock-data/?symbol=${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+        if (data.success) {
+        // Display Current Stock Price
+        const ticket = document.getElementById('ticket');
+        ticket.classList.remove('d-none');
+        document.getElementById('stock-price').textContent = `₹${data.current_price.toFixed(2)}`;
+
+        // Display Market Cap
+        fetch(`/fetch-market-cap/?symbol=${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+        const marketCapTicket = document.getElementById('market-cap-ticket');
+        marketCapTicket.classList.remove('d-none');
+        document.getElementById('market-cap-value').textContent = `₹${data.market_cap.toLocaleString()}`;
+        });
+
+        // Display 52-Week High
+        const highTicket = document.getElementById('ticket-52-week-high');
+        highTicket.classList.remove('d-none');
+        document.getElementById('high-52-week').textContent = `₹${data.high_52_week}`;
+        const currentPrice = parseFloat(document.getElementById('stock-price').textContent.replace('₹', ''));
+        const highPercentageDiff = ((data.high_52_week - currentPrice) / data.high_52_week) * 100;
+        document.getElementById('high-percentage-diff').textContent = `${highPercentageDiff.toFixed(2)}% far from current price`;
+
+        // Change color for high percentage difference
+        highTicket.classList.toggle('green', highPercentageDiff >= 0);
+        highTicket.classList.toggle('red', highPercentageDiff < 0);
+
+        // Display 52-Week Low
+        const lowTicket = document.getElementById('ticket-52-week-low');
+        lowTicket.classList.remove('d-none');
+        document.getElementById('low-52-week').textContent = `₹${data.low_52_week}`;
+        const lowPercentageDiff = (( currentPrice - data.low_52_week) / currentPrice) * 100;
+        document.getElementById('low-percentage-diff').textContent = `${lowPercentageDiff.toFixed(2)}% far from current price`;
+
+        // Color transition logic for 52-week low
+        const getColorForPercentage = (percentage) => {
+        let h = percentage <= 50 ? 120 : 0;  // Green for 0-50%, Red for 51-100%
+        let l = 50;
+
+        if (percentage <= 15) l = 15;                   // Darkest green
+        else if (percentage <= 25) l = 25;              // Lighter green
+        else if (percentage <= 35) l = 35;              // Lighter green
+        else if (percentage <= 50) l = 45;              // Lighter green
+        else if (percentage <= 65) l = 50 + (percentage - 50) * 0.6; // Lighter red
+        else if (percentage <= 75) l = 60 + (percentage - 65) * 0.5; // Lighter red
+        else if (percentage <= 85) l = 70 + (percentage - 75) * 0.3; // Lighter red
+        else l = 80;                                     // Darkest red
+
+        return `hsl(${h}, 100%, ${l}%)`;
+        };
+
+        // Apply color to low ticket based on percentage difference
+        lowTicket.style.backgroundColor = getColorForPercentage(lowPercentageDiff);
+
+        }
+        });
+        }
+        }
+        });
+        });
+    </script>
+
+
+</body>
+</html>-->

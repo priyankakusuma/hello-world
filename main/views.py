@@ -16,6 +16,47 @@ def home(request):
 
 
 
+def fetch_stock_data(request):
+    symbol = request.GET.get('symbol')  # Get the stock symbol from query parameters
+    if not symbol:
+        return JsonResponse({'success': False, 'error': 'Symbol not provided'})
+
+    try:
+        # Ensure the symbol is uppercase
+        symbol = symbol.upper()
+
+        # Append .NS if necessary for Indian stocks
+        if not symbol.endswith(".NS"):
+            symbol = f"{symbol}.NS"
+
+        # Fetch stock data using yfinance
+        stock = yf.Ticker(symbol)
+        stock_data = stock.history(period="1y")  # Fetch 1 year data
+        
+        if stock_data.empty:
+            return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
+
+        # Find current price, 52-week high, and 52-week low
+        current_price = stock_data['Close'][-1]
+        high_52_week = stock_data['High'].max()
+        low_52_week = stock_data['Low'].min()
+
+        # Prepare response data
+        response_data = {
+            'success': True,
+            'current_price': round(current_price, 2),
+            'high_52_week': round(high_52_week, 2),
+            'low_52_week': round(low_52_week, 2),
+        }
+
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Error fetching data: {str(e)}"})
+
+
+
+
 def fetch_market_cap(request):
     symbol = request.GET.get('symbol')
     if not symbol:

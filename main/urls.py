@@ -8,6 +8,7 @@ urlpatterns = [
     path('fetch-stock-price-inr/', views.fetch_stock_price_inr, name='fetch-stock-price-inr'),
 
     path('fetch-market-cap/', views.fetch_market_cap, name='fetch_market_cap'),
+    path('fetch-stock-data/', views.fetch_stock_data, name='fetch_stock_data'),
 
    
 
