@@ -37,7 +37,7 @@ def fetch_stock_data(request):
             return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
 
         # Find current price, 52-week high, and 52-week low
-        current_price = stock_data['Close'][-1]
+        current_price = stock_data['Close'].iloc[-1]
         high_52_week = stock_data['High'].max()
         low_52_week = stock_data['Low'].min()
 
@@ -178,6 +178,106 @@ def fetch_nse_data(request):
     except Exception as e:
         return JsonResponse({"success": False, "error": "An error occurred while processing the data: " + str(e)})
 
+
+# def fetch_cagr_data(request):
+#     symbol = request.GET.get('symbol')
+#     if not symbol:
+#         return JsonResponse({'success': False, 'error': 'Symbol not provided'})
+
+#     try:
+#         # Ensure symbol is uppercase and append ".NS" for Indian stocks if not already present
+#         symbol = symbol.upper()
+#         if not symbol.endswith(".NS"):
+#             symbol = f"{symbol}.NS"
+
+#         # Fetch stock data using yfinance
+#         stock = yf.Ticker(symbol)
+#         stock_data = stock.history(period="5y")  # Fetch 5 years of data
+
+#         if stock_data.empty:
+#             return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
+
+#         # Calculate the 5-Year CAGR
+#         start_price_5y = stock_data['Close'].iloc[0]
+#         end_price_5y = stock_data['Close'].iloc[-1]
+#         cagr_5y = ((end_price_5y / start_price_5y) ** (1 / 5) - 1) * 100
+
+#         # Calculate the 3-Year CAGR (using last 3 years of data)
+#         stock_data_3y = stock_data.loc[stock_data.index >= (stock_data.index[-1] - pd.DateOffset(years=3))]
+#         # stock_data_3y = stock_data.tail(756)  # Approx. 3 years of trading days
+#         start_price_3y = stock_data_3y['Close'].iloc[0]
+#         end_price_3y = stock_data_3y['Close'].iloc[-1]
+#         cagr_3y = ((end_price_3y / start_price_3y) ** (1 / 3) - 1) * 100
+#         print(f"5-Year CAGR: {cagr_5y}")
+#         print(f"3-Year CAGR: {cagr_3y}")
+#         # print(stock_data.head())
+#         # print(stock_data.tail())
+#         # print(stock_data_3y.head())
+#         # print(stock_data_3y.tail())
+#         # print("Filtered 3-Year Data:")
+#         # print(stock_data_3y)
+
+#         # print(f"Start Price (3Y): {start_price_3y}, End Price (3Y): {end_price_3y}")
+#         # print(f"3-Year CAGR Calculation: (({end_price_3y} / {start_price_3y}) ** (1 / 3) - 1) * 100")
+
+
+
+#         return JsonResponse({
+#             'success': True,
+#             'cagr_5y': round(cagr_5y, 2),
+#             'cagr_3y': round(cagr_3y, 2),
+#         })
+            
+
+#     except Exception as e:
+#         return JsonResponse({'success': False, 'error': f"Error fetching data: {str(e)}"})
+
+
+
+def fetch_cagr_data(request):
+    symbol = request.GET.get('symbol')
+    if not symbol:
+        return JsonResponse({'success': False, 'error': 'Symbol not provided'})
+
+    try:
+        # Ensure symbol is uppercase and append ".NS" for Indian stocks if not already present
+        symbol = symbol.upper()
+        if not symbol.endswith(".NS"):
+            symbol = f"{symbol}.NS"
+
+        # Fetch stock data using yfinance
+        stock = yf.Ticker(symbol)
+        stock_data = stock.history(period="5y")  # Fetch 5 years of data
+
+        if stock_data.empty:
+            return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
+
+        # Calculate the 5-Year CAGR
+        start_price_5y = stock_data['Close'].iloc[0]
+        end_price_5y = stock_data['Close'].iloc[-1]
+        cagr_5y = ((end_price_5y / start_price_5y) ** (1 / 5) - 1) * 100
+
+        # Calculate the 3-Year CAGR (using last 3 years of data)
+        stock_data_3y = stock_data.loc[stock_data.index >= (stock_data.index[-1] - pd.DateOffset(years=3))]  # 3 years of data
+        if stock_data_3y.empty:
+            return JsonResponse({'success': False, 'error': f"Not enough data to calculate 3-Year CAGR for {symbol}"})
+        
+        start_price_3y = stock_data_3y['Close'].iloc[0]
+        end_price_3y = stock_data_3y['Close'].iloc[-1]
+        cagr_3y = ((end_price_3y / start_price_3y) ** (1 / 3) - 1) * 100
+        print(f"Start Date (3Y): {stock_data_3y.index[0]}")
+        print(f"End Date (3Y): {stock_data_3y.index[-1]}")
+        print(f"Start Price (3Y): {start_price_3y}, End Price (3Y): {end_price_3y}")
+        print(f"3-Year CAGR Calculation: (({end_price_3y} / {start_price_3y}) ** (1 / 3) - 1) * 100 = {cagr_3y}")
+
+        return JsonResponse({
+            'success': True,
+            'cagr_5y': round(cagr_5y, 2),
+            'cagr_3y': round(cagr_3y, 2),
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Error fetching data: {str(e)}"})
 
 
 
