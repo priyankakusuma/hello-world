@@ -10,6 +10,7 @@ urlpatterns = [
     path('fetch-market-cap/', views.fetch_market_cap, name='fetch_market_cap'),
     path('fetch-stock-data/', views.fetch_stock_data, name='fetch_stock_data'),
     path('fetch-cagr-data/', views.fetch_cagr_data, name='fetch_cagr_data'),
+    path('fetch-volume-trader-data/', views.fetch_volume_trader_data, name='fetch_volume_trader_data'),
 
    
 
