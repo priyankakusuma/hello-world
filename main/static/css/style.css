@@ -21,16 +21,21 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+/*    width: 200%;*/
+    position: relative;
+/*    display: inline-block;*/
 }
 
     .search-bar-container input {
-        width: 300px;
+        /*        width: 300px;*/
         margin-right: 10px;
         padding: 8px;
         border-radius: 10px;
         border: 1px solid #ddd;
         text-align: center;
+        width: auto; /* Dynamic width based on content */
+        min-width: 500px; /* Set a minimum width */
+        max-width: 400px;
     }
 
     .search-bar-container button {
@@ -96,9 +101,39 @@ header {
 }
 
 #results {
-    display: none;
+    /*display: none;
+    position: absolute;
+    top: 100%;*/ /* Position below the search bar */
+    /*left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+    /*width: 100%;*/ /* Match width of the search bar */
+    min-width: 400px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 100%; /* Position below the search bar */
+    left: 0;
+    max-height: 300px; /* Optional: Limit height for scroll */
+    overflow-y: auto;
+    z-index: 1000;
 }
 
+    #results .dropdown-item {
+        padding: 10px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+        #results .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
 #ticket-cagr-5y,
 #ticket-cagr-3y {
     margin: 10px;

@@ -15,8 +15,9 @@
     <header class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
         <a href="#" class="text-white">Home</a>
         <div class="d-flex justify-content-center align-items-center w-100">
-            <div class="search-bar-container">
-                <input type="text" id="search-bar" placeholder="Search...">
+            <div class="search-bar-container position-relative">
+                <input type="text" id="search-bar" placeholder="Search..." class="form-control" autocomplete="off">
+                <ul class="dropdown-menu " id="results" style="display: none;": 300px; overflow-y: auto; display: none;"></ul>
                 <button id="create-api-button">Create KPIs</button>
             </div>
         </div>
@@ -71,7 +72,7 @@
 
             <div id="volume-trader-ticket" class="card d-none volume-card">
                 <div class="card-body">
-                    <h5 class="card-title">Volume Trader</h5>
+                    <h5 class="card-title">Volume Traded</h5>
                     <p id="volume-trader-info">Volume: 0</p>
                     <div class="progress">
                         <div id="volume-trader-percentage" class="progress-bar bg-success" role="progressbar"
@@ -86,222 +87,7 @@
             <ul id="results"></ul>
         </div>
     </div>
-    <!--<script>
-        // Dark/Light Mode Toggle using Bootstrap
-        document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.querySelector('.toggle-mode'); // The moon icon
-        const body = document.querySelector('body');
-        toggleButton.addEventListener('click', function() {
-        const currentTheme = body.getAttribute('data-bs-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        body.setAttribute('data-bs-theme', newTheme); // Toggle theme
-        });
-
-        // Enable Bootstrap tooltips (for icon hover hint)
-        var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Handle Search Input
-        document.getElementById('search-bar').addEventListener('input', function () {
-        const searchQuery = this.value.toLowerCase();
-        fetch('/fetch-nse-data/')
-        .then(response => response.json())
-        .then(data => {
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '';
-
-        if (data.success) {
-        const companies = data.data;
-        const filteredCompanies = Object.keys(companies)
-        .filter(name => {
-        const symbol = companies[name];
-        return name.toLowerCase().startsWith(searchQuery) || symbol.toLowerCase().startsWith(searchQuery);
-        })
-        .map(name => ({
-        name: name,
-        symbol: companies[name]
-        }));
-
-        filteredCompanies.forEach(company => {
-        const li = document.createElement('li');
-        li.textContent = `${company.name} : ${company.symbol}`;
-        li.addEventListener('click', () => {
-        document.getElementById('search-bar').value = company.name;
-        resultsContainer.style.display = 'none'; // Hide the list
-        });
-        resultsContainer.appendChild(li);
-        });
-
-        if (filteredCompanies.length > 0) {
-        resultsContainer.style.display = 'block'; // Show the list if matches found
-        } else {
-        resultsContainer.style.display = 'none'; // Hide the list if no matches
-        }
-        } else {
-        alert('Failed to fetch data: ' + data.error);
-        }
-        })
-        .catch(error => console.error('Error fetching NSE data:', error));
-        });
-
-        // Handle "Create KPI" Button Click
-        document.getElementById('create-api-button').addEventListener('click', function () {
-        const searchValue = document.getElementById('search-bar').value;
-
-        if (!searchValue) {
-        alert('Please select a company from the list.');
-        return;
-        }
-
-        fetch('/fetch-nse-data/')
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-        const companies = data.data;
-        const symbol = companies[searchValue];
-
-        if (symbol) {
-        // Fetch Stock Data including 52-Week High and Low
-        fetch(`/fetch-stock-data/?symbol=${symbol}`)
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-        // Display Current Stock Price
-        const ticket = document.getElementById('ticket');
-        ticket.classList.remove('d-none');
-        document.getElementById('stock-price').textContent = `₹${data.current_price.toFixed(2)}`;
-
-        // Display Market Cap
-        fetch(`/fetch-market-cap/?symbol=${symbol}`)
-        .then(response => response.json())
-        .then(data => {
-        const marketCapTicket = document.getElementById('market-cap-ticket');
-        marketCapTicket.classList.remove('d-none');
-        document.getElementById('market-cap-value').textContent = `₹${data.market_cap.toLocaleString()}`;
-        });
-
-        // Display 5-Year CAGR
-        fetch(`/fetch-cagr-data/?symbol=${symbol}&years=5`)
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-        const cagr5Ticket = document.getElementById('ticket-cagr-5');
-        cagr5Ticket.classList.remove('d-none');
-        document.getElementById('cagr-5-value').textContent = `${data.cagr_5y}%`; // Add CAGR value
-        }
-        });
-
-        // Display 3-Year CAGR
-        fetch(`/fetch-cagr-data/?symbol=${symbol}&years=3`)
-        .then(response => response.json())
-        .then(data => {
-        console.log("3-Year CAGR Response:", data);
-        if (data.success) {
-        const cagr3Ticket = document.getElementById('ticket-cagr-3');
-        cagr3Ticket.classList.remove('d-none');
-        document.getElementById('cagr-3-value').textContent = `${data.cagr_3y}%`; // Add CAGR value
-        }
-        });
-
-        // Display 52-Week High
-        const highTicket = document.getElementById('ticket-52-week-high');
-        highTicket.classList.remove('d-none');
-        document.getElementById('high-52-week').textContent = `₹${data.high_52_week}`;
-        const currentPrice = parseFloat(document.getElementById('stock-price').textContent.replace('₹', ''));
-        const highPercentageDiff = ((data.high_52_week - currentPrice) / data.high_52_week) * 100;
-        document.getElementById('high-percentage-diff').textContent = `${highPercentageDiff.toFixed(2)}% far from current price`;
-
-        // Function to calculate color for high percentage difference (reverse of 52-week low)
-        const getColorForHighPercentage = (percentage) => {
-        let h = percentage <= 50 ? 0 : 120;  // Red for 0-50%, Green for 51-100%
-        let l = 50;
-
-        if (percentage <= 15) l = 25;                   // Darkest red
-        else if (percentage <= 25) l = 35;              // Lighter red
-        else if (percentage <= 35) l = 45;
-        else if (percentage <= 45) l = 50;                                               // Lighter red
-        else if (percentage <= 50) l = 60;              // Lighter red
-        else if (percentage <= 65) l = 50 + (percentage - 50) * 0.6; // Lighter green
-        else if (percentage <= 75) l = 60 + (percentage - 65) * 0.5; // Lighter green
-        else if (percentage <= 85) l = 70 + (percentage - 75) * 0.3; // Lighter green
-        else l = 15;                                     // Darkest green
-
-        return `hsl(${h}, 100%, ${l}%)`;
-        };
-
-        // Change color for high percentage difference
-        highTicket.style.backgroundColor = getColorForHighPercentage(highPercentageDiff);
-
-        // Display 52-Week Low
-        const lowTicket = document.getElementById('ticket-52-week-low');
-        lowTicket.classList.remove('d-none');
-        document.getElementById('low-52-week').textContent = `₹${data.low_52_week}`;
-        const lowPercentageDiff = (( currentPrice - data.low_52_week) / currentPrice) * 100;
-        document.getElementById('low-percentage-diff').textContent = `${lowPercentageDiff.toFixed(2)}% far from current price`;
-
-        // Color transition logic for 52-week low
-        const getColorForPercentage = (percentage) => {
-        let h = percentage <= 50 ? 120 : 0;  // Green for 0-50%, Red for 51-100%
-        let l = 50;
-
-        if (percentage <= 15) l = 15;                   // Darkest green
-        else if (percentage <= 25) l = 20;              // Lighter green
-        else if (percentage <= 35) l = 30;
-        else if (percentage <= 45) l = 40;                                               // Lighter green
-        else if (percentage <= 50) l = 45;              // Lighter green
-        else if (percentage <= 65) l = 50 + (percentage - 50) * 0.6; // Lighter red
-        else if (percentage <= 75) l = 60 + (percentage - 65) * 0.5; // Lighter red
-        else if (percentage <= 85) l = 70 + (percentage - 75) * 0.3; // Lighter red
-        else l = 80;                                     // Darkest red
-
-        return `hsl(${h}, 100%, ${l}%)`;
-        };
-
-        // Apply color to low ticket based on percentage difference
-        lowTicket.style.backgroundColor = getColorForPercentage(lowPercentageDiff);
-        }
-        });
-
-        fetch(`/fetch-volume-trader-data/?symbol=${symbol}`)
-        .then(response => response.json())
-        .then(volumeData => {
-        if (volumeData.success) {
-        const volumeTicket = document.getElementById('volume-trader-ticket');
-        volumeTicket.style.display = 'block';
-
-        // Update volume information
-        const volumeInfo = document.getElementById('volume-trader-info');
-        volumeInfo.textContent = `Volume: ${volumeData.volume_traded.toLocaleString()}`;
-
-        // Update progress bar
-        const volumePercentage = volumeData.volume_percentage; // Assume this is provided in the API
-        const volumeBar = document.getElementById('volume-trader-percentage');
-        volumeBar.style.width = `${volumePercentage}%`;
-        volumeBar.setAttribute('aria-valuenow', volumePercentage);
-
-        // Change progress bar color
-        if (volumePercentage < 50) {
-        volumeBar.classList.add('bg-success');
-        volumeBar.classList.remove('bg-danger');
-        } else {
-        volumeBar.classList.add('bg-danger');
-        volumeBar.classList.remove('bg-success');
-        }
-        } else {
-        console.error('Error fetching volume data:', volumeData.error);
-        }
-        })
-        .catch(err => console.error('Error fetching volume trader data:', err));
-        }
-        }
-        });
-        });
-        });
-    </script>-->
-
-
+  
     <script>
         // Dark/Light Mode Toggle using Bootstrap
         document.addEventListener('DOMContentLoaded', function() {
@@ -320,41 +106,46 @@
         });
         });
 
+
         // Handle Search Input
         document.getElementById('search-bar').addEventListener('input', function () {
         const searchQuery = this.value.toLowerCase();
-        fetch('/fetch-nse-data/')
-        .then(response => response.json())
-        .then(data => {
         const resultsContainer = document.getElementById('results');
         resultsContainer.innerHTML = '';
 
+        fetch('/fetch-nse-data/')
+        .then(response => response.json())
+        .then(data => {
         if (data.success) {
         const companies = data.data;
         const filteredCompanies = Object.keys(companies)
         .filter(name => {
         const symbol = companies[name];
-        return name.toLowerCase().startsWith(searchQuery) || symbol.toLowerCase().startsWith(searchQuery);
+        return (
+        name.toLowerCase().startsWith(searchQuery) || 
+        symbol.toLowerCase().startsWith(searchQuery)
+        );
         })
         .map(name => ({
         name: name,
         symbol: companies[name]
         }));
 
+        if (filteredCompanies.length > 0) {
         filteredCompanies.forEach(company => {
         const li = document.createElement('li');
+        li.className = 'dropdown-item';
         li.textContent = `${company.name} : ${company.symbol}`;
         li.addEventListener('click', () => {
-        document.getElementById('search-bar').value = company.name;
-        resultsContainer.style.display = 'none'; // Hide the list
+            document.getElementById('search-bar').value = company.name;
+            resultsContainer.style.display = 'none'; // Hide the dropdown
         });
         resultsContainer.appendChild(li);
         });
 
-        if (filteredCompanies.length > 0) {
-        resultsContainer.style.display = 'block'; // Show the list if matches found
+        resultsContainer.style.display = 'block'; // Show the dropdown
         } else {
-        resultsContainer.style.display = 'none'; // Hide the list if no matches
+        resultsContainer.style.display = 'none'; // Hide if no matches
         }
         } else {
         alert('Failed to fetch data: ' + data.error);
@@ -362,6 +153,17 @@
         })
         .catch(error => console.error('Error fetching NSE data:', error));
         });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+        const searchBar = document.getElementById('search-bar');
+        const resultsContainer = document.getElementById('results');
+        if (!searchBar.contains(event.target) && !resultsContainer.contains(event.target)) {
+            resultsContainer.style.display = 'none';
+        }
+        });
+
+    
 
         // Handle "Create KPI" Button Click
         document.getElementById('create-api-button').addEventListener('click', function () {

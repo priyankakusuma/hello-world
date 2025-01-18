@@ -168,7 +168,7 @@ def fetch_nse_data(request):
         # Create a list of dictionaries
         company_list = [{"name": row["NAME OF COMPANY"],"symbol": row["SYMBOL"]} for _, row in df_nse.iterrows()]
         company_dict = {company["name"]: company["symbol"] for company in company_list}
-        print(df_nse.head())
+        
       
         return JsonResponse({"success": True, "data": company_dict}, safe=False)
 
