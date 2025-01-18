@@ -17,7 +17,7 @@
         <div class="d-flex justify-content-center align-items-center w-100">
             <div class="search-bar-container position-relative">
                 <input type="text" id="search-bar" placeholder="Search..." class="form-control" autocomplete="off">
-                <ul class="dropdown-menu " id="results" style="display: none;": 300px; overflow-y: auto; display: none;"></ul>
+                <ul class="dropdown-menu " id="results" style="display: none;"></ul>
                 <button id="create-api-button">Create KPIs</button>
             </div>
         </div>
@@ -56,7 +56,6 @@
                     <p id="low-percentage-diff"></p>
                 </div>
             </div>
-            <!-- New CAGR Tickets -->
             <div id="ticket-cagr-5" class="card d-none">
                 <div class="card-body">
                     <h5 class="card-title">5-Year CAGR</h5>
@@ -84,7 +83,7 @@
         </div>
 
         <div class="results-container">
-            <ul id="results"></ul>
+            <!--<ul id="results"></ul>-->
         </div>
     </div>
   
@@ -107,20 +106,48 @@
         });
 
 
-        // Handle Search Input
-        document.getElementById('search-bar').addEventListener('input', function () {
-        const searchQuery = this.value.toLowerCase();
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '';
+        let companiesData = null; // Variable to store fetched data
 
+        // Remove duplicates from the fetched data
+        function removeDuplicates(data) {
+        const uniqueCompanies = {};
+        for (const [name, symbol] of Object.entries(data)) {
+            uniqueCompanies[name] = symbol; // Last occurrence will overwrite duplicates
+        }
+        return uniqueCompanies;
+        }
+
+        // Fetch data once on page load
         fetch('/fetch-nse-data/')
         .then(response => response.json())
         .then(data => {
         if (data.success) {
-        const companies = data.data;
-        const filteredCompanies = Object.keys(companies)
+            companiesData = removeDuplicates(data.data); // Store unique data
+        } else {
+            alert('Failed to fetch data: ' + data.error);
+        }
+        })
+        .catch(error => console.error('Error fetching NSE data:', error));
+
+        // Handle Search Input with throttling
+        let timeout;
+        document.getElementById('search-bar').addEventListener('input', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+        const searchQuery = this.value.toLowerCase();
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
+
+        if (!companiesData) {
+        // If data is not yet loaded, display a message or do nothing
+        resultsContainer.innerHTML = '<li class="dropdown-item">Loading...</li>';
+        resultsContainer.style.display = 'block';
+        return;
+        }
+
+        const filteredCompanies = Object.keys(companiesData)
         .filter(name => {
-        const symbol = companies[name];
+        const symbol = companiesData[name];
         return (
         name.toLowerCase().startsWith(searchQuery) || 
         symbol.toLowerCase().startsWith(searchQuery)
@@ -128,7 +155,7 @@
         })
         .map(name => ({
         name: name,
-        symbol: companies[name]
+        symbol: companiesData[name],
         }));
 
         if (filteredCompanies.length > 0) {
@@ -142,16 +169,11 @@
         });
         resultsContainer.appendChild(li);
         });
-
-        resultsContainer.style.display = 'block'; // Show the dropdown
+        resultsContainer.style.display = 'block'; // Show dropdown
         } else {
-        resultsContainer.style.display = 'none'; // Hide if no matches
+            resultsContainer.style.display = 'none'; // Hide if no matches
         }
-        } else {
-        alert('Failed to fetch data: ' + data.error);
-        }
-        })
-        .catch(error => console.error('Error fetching NSE data:', error));
+        }, 300); // Delay of 300ms
         });
 
         // Hide dropdown when clicking outside
@@ -159,9 +181,10 @@
         const searchBar = document.getElementById('search-bar');
         const resultsContainer = document.getElementById('results');
         if (!searchBar.contains(event.target) && !resultsContainer.contains(event.target)) {
-            resultsContainer.style.display = 'none';
+        resultsContainer.style.display = 'none';
         }
         });
+
 
     
 
