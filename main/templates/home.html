@@ -10,6 +10,8 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body data-bs-theme="light">
     <header class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
@@ -24,63 +26,106 @@
         <i class="bi bi-moon-fill toggle-mode text-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle Dark Mode"></i>
     </header>
     <div class="content">
-
-
-
         <div class="tickets-container">
-            <!-- Tickets Section -->
-            <div id="ticket" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">Current Stock Price</h5>
-                    <p id="stock-price">₹0.00</p>
+            <!-- First Row of Tickets (3 tickets) -->
+            <div class="row">
+                <div id="ticket" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Stock Price</h5>
+                        <p id="stock-price">₹0.00</p>
+                    </div>
                 </div>
-            </div>
-            <div id="market-cap-ticket" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">Market Cap</h5>
-                    <p id="market-cap-value">₹0</p>
+                <div id="market-cap-ticket" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Market Cap</h5>
+                        <p id="market-cap-value">₹0</p>
+                    </div>
                 </div>
-            </div>
-            <!-- New Tickets for 52-Week High and Low -->
-            <div id="ticket-52-week-high" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">52-Week High</h5>
-                    <p id="high-52-week">₹0.00</p>
-                    <p id="high-percentage-diff"></p>
-                </div>
-            </div>
-            <div id="ticket-52-week-low" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">52-Week Low</h5>
-                    <p id="low-52-week">₹0.00</p>
-                    <p id="low-percentage-diff"></p>
-                </div>
-            </div>
-            <div id="ticket-cagr-5" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">5-Year CAGR</h5>
-                    <p id="cagr-5-value">0.00%</p>
-                </div>
-            </div>
-            <div id="ticket-cagr-3" class="card d-none">
-                <div class="card-body">
-                    <h5 class="card-title">3-Year CAGR</h5>
-                    <p id="cagr-3-value">0.00%</p>
-                </div>
-            </div>
-
-            <div id="volume-trader-ticket" class="card d-none volume-card">
-                <div class="card-body">
-                    <h5 class="card-title">Volume Traded</h5>
-                    <p id="volume-trader-info">Volume: 0</p>
-                    <div class="progress">
-                        <div id="volume-trader-percentage" class="progress-bar bg-success" role="progressbar"
-                             style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                        <span id="percentage-text" class="percentage-text">0%</span>
+                <div id="ticket-52-week-high" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">52-Week High</h5>
+                        <p id="high-52-week">₹0.00</p>
+                        <p id="high-percentage-diff"></p>
                     </div>
                 </div>
             </div>
+
+            <!-- Second Row of Tickets (3 tickets) -->
+            <div class="row">
+                <div id="ticket-52-week-low" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">52-Week Low</h5>
+                        <p id="low-52-week">₹0.00</p>
+                        <p id="low-percentage-diff"></p>
+                    </div>
+                </div>
+                <div id="ticket-cagr-5" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">5-Year CAGR</h5>
+                        <p id="cagr-5-value">0.00%</p>
+                    </div>
+                </div>
+                <div id="ticket-cagr-3" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">3-Year CAGR</h5>
+                        <p id="cagr-3-value">0.00%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Row of Tickets (3 tickets) -->
+            <div class="row">
+                <div id="volume-trader-ticket" class="col-4 card d-none volume-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Volume Traded</h5>
+                        <p id="volume-trader-info">Volume: 0</p>
+                        <div class="progress">
+                            <div id="volume-trader-percentage" class="progress-bar bg-success" role="progressbar"
+                                 style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            <span id="percentage-text" class="percentage-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Tickets for Pumped and Dumped -->
+                <div id="ticket-pumped" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Is This Being Pumped?</h5>
+                        <p id="pumped-status">No</p>
+                    </div>
+                </div>
+                <div id="ticket-dumped" class="col-4 card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Is This Being Dumped?</h5>
+                        <p id="dumped-status">No</p>
+                    </div>
+                </div>
+                <!--<div class="ticket-container">-->
+                    <!-- Ticket for MACD -->
+                    <div class="ticket" id="macd-ticket" style="display: none;" >
+                        <h3>Moving Average Convergence/Divergence (MACD)</h3>
+                        <p id="macd-content">Loading...</p>
+                    </div>
+
+                    <!-- Ticket for RSI -->
+                    <div class="ticket" id="rsi-ticket" style="display:none;">
+                        <h3>Relative Strength Index (RSI)</h3>
+                        <p id="rsi-content">Loading...</p>
+                    </div>
+
+                    <!-- Ticket for Bollinger Bands -->
+                    <div class="ticket" id="bollinger-ticket" style="display:none;">
+                        <h3>Bollinger Bands</h3>
+                        <p id="bollinger-content">Loading...</p>
+                    </div>
+                <!--</div>-->
+
+            </div>
         </div>
+
+
+
+
 
         <div class="results-container">
             <!--<ul id="results"></ul>-->
@@ -247,6 +292,42 @@
         }
         });
 
+
+        // Fetch and Display Stock Indicators (MACD, RSI, Bollinger Bands)
+        fetch(`/fetch-stock-indicators/?symbol=${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+        console.log('Fetched stock indicators:', data);
+            if (data.success) {
+                // Display MACD Ticket
+                const macdTicket = document.getElementById('macd-ticket');
+                macdTicket.style.display = 'block';
+                document.getElementById('macd-content').textContent =
+                    `MACD: ${data.data.MACD.MACD.toFixed(2)}, Signal: ${data.data.MACD.Signal.toFixed(2)}`;
+
+                // Display RSI Ticket
+                const rsiTicket = document.getElementById('rsi-ticket');
+                rsiTicket.style.display = 'block';
+                document.getElementById('rsi-content').textContent =
+                    `RSI: ${data.data.RSI.toFixed(2)}`;
+
+                // Display Bollinger Bands Ticket
+                const bollingerTicket = document.getElementById('bollinger-ticket');
+                bollingerTicket.style.display = 'block';
+                document.getElementById('bollinger-content').textContent =
+                    `Middle: ₹${data.data.BollingerBands.SMA20.toFixed(2)}, Upper: ₹${data.data.BollingerBands.UpperBand.toFixed(2)}, Lower: ₹${data.data.BollingerBands.LowerBand.toFixed(2)}`;
+            } else {
+                console.error('Error fetching stock indicators:', data.error);
+                alert('Could not fetch stock indicators.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching stock indicators:', error);
+            alert('An error occurred while fetching stock indicators.');
+        });
+
+
+
         // Display 52-Week High
         const highTicket = document.getElementById('ticket-52-week-high');
         highTicket.classList.remove('d-none');
@@ -357,12 +438,40 @@
         })
         .catch(err => console.error('Error fetching volume trader data:', err));
 
+
+        // New functionality for pump/dump status
+        $.ajax({
+        url: '/company/pump_or_dump/?symbol=' + symbol,
+        method: 'GET',
+        success: function (data) {
+        console.log(data);  // Log data to check if it's correct
+
+        $('#pump-status p').text(data.pump_status);
+        $('#dump-status p').text(data.dump_status);
+        $('#ticket-pumped').removeClass('d-none');
+        $('#ticket-dumped').removeClass('d-none');
+        },
+        error: function (error) {
+        alert('Error fetching pump/dump status');
+        }
+        });
+
+        
+
+
+       
+
+   
+
        
         
         }
         }
         });
         });
+
+
+
     </script>
 
 </body>

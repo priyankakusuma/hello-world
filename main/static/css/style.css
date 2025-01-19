@@ -21,13 +21,10 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-/*    width: 200%;*/
     position: relative;
-/*    display: inline-block;*/
 }
 
     .search-bar-container input {
-        /*        width: 300px;*/
         margin-right: 10px;
         padding: 8px;
         border-radius: 10px;
@@ -101,18 +98,8 @@ header {
 }
 
 #results {
-    /*display: none;
-    position: absolute;
-    top: 100%;*/ /* Position below the search bar */
-    /*left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
-    /*width: 100%;*/ /* Match width of the search bar */
-    min-width: 400px;
+    
+    min-width: 500px;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -222,7 +209,80 @@ header {
 }
 
 
+.ticket {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 10px 0;
+}
 
+    .ticket h4 {
+        font-size: 1.2rem;
+    }
+
+#pump-status {
+    background-color: #dff0d8; /* Light green for pump */
+}
+
+#dump-status {
+    background-color: #f2dede; /* Light red for dump */
+}
+
+
+/* Shared Ticket Styling */
+#macd-ticket, #rsi-ticket, #bollinger-ticket {
+    background-color: wheat; /* Match existing ticket background */
+    border-radius: 50px; /* Rounded corners for consistent styling */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Internal padding */
+    margin: 10px; /* Space around tickets */
+    text-align: center; /* Center-align content */
+    flex: 1 1 calc(33.33% - 1rem); /* Ensure tickets fit layout */
+    min-width: 200px; /* Prevent tickets from becoming too small */
+}
+
+/* Heading Styling */
+#macd-ticket h3, #rsi-ticket h3, #bollinger-ticket h3 {
+    font-size: 1.2rem; /* Slightly larger font size */
+    font-weight: bold; /* Bold headings */
+    color: #343a40; /* Dark text for contrast */
+    margin-bottom: 10px; /* Space below heading */
+    background-color: #f8f9fa; /* Light background for headings */
+    padding: 10px; /* Add padding to heading */
+    border-radius: 10px; /* Rounded corners for heading */
+}
+
+/* Paragraph Styling */
+#macd-ticket p, #rsi-ticket p, #bollinger-ticket p {
+    font-size: 1rem; /* Standard text size */
+    color: black; /* Text color */
+    margin-top: 10px; /* Space above paragraph */
+    background-color: #f8f9fa; /* Light background for content */
+    padding: 10px; /* Add padding to content */
+    border-radius: 10px; /* Rounded corners for content */
+    font-weight: normal; /* Normal weight text */
+}
+
+/* Optional: Specific Styles for Individual Tickets */
+/* MACD Ticket */
+#macd-ticket {
+    border: 2px solid #007bff; /* Blue border for MACD */
+}
+
+/* RSI Ticket */
+#rsi-ticket {
+    border: 2px solid #28a745; /* Green border for RSI */
+}
+
+/* Bollinger Bands Ticket */
+#bollinger-ticket {
+    border: 2px solid #ffc107; /* Yellow border for Bollinger Bands */
+}
+
+/* Optional: Customize Content Text for Each */
+#macd-content, #rsi-content, #bollinger-content {
+    font-weight: bold; /* Make the text bold */
+}
 
 
 

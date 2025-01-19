@@ -11,6 +11,9 @@ urlpatterns = [
     path('fetch-stock-data/', views.fetch_stock_data, name='fetch_stock_data'),
     path('fetch-cagr-data/', views.fetch_cagr_data, name='fetch_cagr_data'),
     path('fetch-volume-trader-data/', views.fetch_volume_trader_data, name='fetch_volume_trader_data'),
+    # path('company/<str:symbol>/pump_or_dump/', views.fetch_pump_or_dump, name='fetch_pump_or_dump'),
+    path('company/pump_or_dump/', views.fetch_pump_or_dump, name='fetch_pump_or_dump'),
+    path('fetch-stock-indicators/', views.fetch_stock_indicators, name='fetch_stock_indicators'),
 
    
 

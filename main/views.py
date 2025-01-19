@@ -281,4 +281,115 @@ def fetch_volume_trader_data(request):
 
 
 
+   
+from datetime import datetime, timedelta
+
+def fetch_pump_or_dump(request):
+    symbol = request.GET.get('symbol')
+    if not symbol:
+        return JsonResponse({'success': False, 'error': 'Symbol not provided'})
+
+    try:
+        # Ensure the symbol is uppercase and append ".NS" for Indian stocks if not already present
+        symbol = symbol.upper()
+        if not symbol.endswith(".NS"):
+            symbol = f"{symbol}.NS"
+
+        # Fetch stock data using yfinance (fetch last 7 days of data)
+        stock = yf.Ticker(symbol)
+        stock_data = stock.history(period="5d")
+
+        if stock_data.empty:
+            return JsonResponse({'success': False, 'error': f"No data found for symbol: {symbol}. The stock may be delisted or unavailable."})
+
+        # Get the current price and the price 7 days ago
+        current_price = stock_data['Close'].iloc[-1]
+        price_7_days_ago = stock_data['Close'].iloc[0]
+
+        # Calculate percentage change
+        price_change = ((current_price - price_7_days_ago) / price_7_days_ago) * 100
+
+        # Determine if the stock is being pumped or dumped
+        if price_change > 30:
+            pump_status = 'Yes, It is being pumped!'
+            dump_status = 'No'
+        elif price_change < -30:
+            pump_status = 'No'
+            dump_status = 'Yes, It is being dumped!'
+        else:
+            pump_status = 'No'
+            dump_status = 'No'
+
+        return JsonResponse({
+            'success': True,
+            'pump_status': pump_status,
+            'dump_status': dump_status
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Error fetching data: {str(e)}"})
+
+def fetch_stock_indicators(request):
+    """
+    Fetches MACD, RSI, and Bollinger Bands for a given stock symbol using yfinance.
+    """
+    # Extract the symbol from the request
+    symbol = request.GET.get("symbol", None)
+    if not symbol:
+        return JsonResponse({"success": False, "error": "No stock symbol provided."})
+    
+    try:
+        # Ensure the symbol is uppercase and ends with ".NS"
+        symbol = symbol.upper()
+        if not symbol.endswith(".NS"):
+            symbol = f"{symbol}.NS"
+
+        # Fetch stock data using yfinance
+        stock = yf.Ticker(symbol)
+        stock_data = stock.history(period="6mo", interval="1d")
+
+        # Ensure data is available
+        if stock_data.empty or len(stock_data) < 26:
+            return JsonResponse({"success": False, "error": "Insufficient data for calculations."})
+
+        # MACD Calculation
+        stock_data['EMA12'] = stock_data['Close'].ewm(span=12, adjust=False).mean()
+        stock_data['EMA26'] = stock_data['Close'].ewm(span=26, adjust=False).mean()
+        stock_data['MACD'] = stock_data['EMA12'] - stock_data['EMA26']
+        stock_data['Signal'] = stock_data['MACD'].ewm(span=9, adjust=False).mean()
+        macd = stock_data.iloc[-1][['MACD', 'Signal']].to_dict()
+
+        # RSI Calculation
+        delta = stock_data['Close'].diff(1)
+        gain = delta.where(delta > 0, 0)
+        loss = -delta.where(delta < 0, 0)
+        avg_gain = gain.rolling(window=14).mean()
+        avg_loss = loss.rolling(window=14).mean()
+        rs = avg_gain / avg_loss
+        stock_data['RSI'] = 100 - (100 / (1 + rs))
+        rsi = stock_data.iloc[-1]['RSI']
+
+        # Bollinger Bands Calculation
+        stock_data['SMA20'] = stock_data['Close'].rolling(window=20).mean()
+        stock_data['UpperBand'] = stock_data['SMA20'] + (2 * stock_data['Close'].rolling(window=20).std())
+        stock_data['LowerBand'] = stock_data['SMA20'] - (2 * stock_data['Close'].rolling(window=20).std())
+        bollinger_bands = stock_data.iloc[-1][['SMA20', 'UpperBand', 'LowerBand']].to_dict()
+
+        # Return the results
+        return JsonResponse({
+            "success": True,
+            "data": {
+                "MACD": macd,
+                "RSI": rsi,
+                "BollingerBands": bollinger_bands
+            }
+        }, safe=False)
+    
+    except Exception as e:
+        return JsonResponse({"success": False, "error": f"An error occurred while processing the data: {str(e)}"})
+
+
+
+
+
 
