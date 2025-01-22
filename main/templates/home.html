@@ -26,56 +26,40 @@
         <i class="bi bi-moon-fill toggle-mode text-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle Dark Mode"></i>
     </header>
     <div class="content">
+
         <div class="tickets-container">
-            <!-- First Row of Tickets (3 tickets) -->
-            <div class="row">
-                <div id="ticket" class="col-4 card d-none">
+            <div class="tickets-grid">
+                <!-- Ticket 1 -->
+                <div id="ticket" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">Current Stock Price</h5>
                         <p id="stock-price">₹0.00</p>
                     </div>
                 </div>
-                <div id="market-cap-ticket" class="col-4 card d-none">
+                <!-- Ticket 2 -->
+                <div id="market-cap-ticket" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">Market Cap</h5>
                         <p id="market-cap-value">₹0</p>
                     </div>
                 </div>
-                <div id="ticket-52-week-high" class="col-4 card d-none">
-                    <div class="card-body">
-                        <h5 class="card-title">52-Week High</h5>
-                        <p id="high-52-week">₹0.00</p>
-                        <p id="high-percentage-diff"></p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Second Row of Tickets (3 tickets) -->
-            <div class="row">
-                <div id="ticket-52-week-low" class="col-4 card d-none">
-                    <div class="card-body">
-                        <h5 class="card-title">52-Week Low</h5>
-                        <p id="low-52-week">₹0.00</p>
-                        <p id="low-percentage-diff"></p>
-                    </div>
-                </div>
-                <div id="ticket-cagr-5" class="col-4 card d-none">
+                <!-- Ticket 5 -->
+                <div id="ticket-cagr-5" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">5-Year CAGR</h5>
                         <p id="cagr-5-value">0.00%</p>
                     </div>
                 </div>
-                <div id="ticket-cagr-3" class="col-4 card d-none">
+                <!-- Ticket 6 -->
+                <div id="ticket-cagr-3" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">3-Year CAGR</h5>
                         <p id="cagr-3-value">0.00%</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Third Row of Tickets (3 tickets) -->
-            <div class="row">
-                <div id="volume-trader-ticket" class="col-4 card d-none volume-card">
+                <!-- Ticket 7 -->
+                <div id="volume-trader-ticket" class="card d-none volume-card">
                     <div class="card-body">
                         <h5 class="card-title">Volume Traded</h5>
                         <p id="volume-trader-info">Volume: 0</p>
@@ -86,44 +70,55 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- New Tickets for Pumped and Dumped -->
-                <div id="ticket-pumped" class="col-4 card d-none">
+                <!-- Ticket 8 -->
+                <div id="ticket-pumped" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">Is This Being Pumped?</h5>
                         <p id="pumped-status">No</p>
                     </div>
                 </div>
-                <div id="ticket-dumped" class="col-4 card d-none">
+                <!-- Ticket 9 -->
+                <div id="ticket-dumped" class="card d-none">
                     <div class="card-body">
                         <h5 class="card-title">Is This Being Dumped?</h5>
                         <p id="dumped-status">No</p>
                     </div>
                 </div>
-                <!--<div class="ticket-container">-->
-                    <!-- Ticket for MACD -->
-                    <div class="ticket" id="macd-ticket" style="display: none;" >
-                        <h3>Moving Average Convergence/Divergence (MACD)</h3>
-                        <p id="macd-content">Loading...</p>
+                <!-- Ticket 10 -->
+                <div class="card d-none" id="macd-ticket" >
+                    <h3>Moving Average Convergence/Divergence (MACD)</h3>
+                    <p id="macd-content">Loading...</p>
+                </div>
+                <!-- Ticket 11 -->
+                <div class="card d-none" id="rsi-ticket" style="display: none;">
+                    <h3>Relative Strength Index (RSI)</h3>
+                    <p id="rsi-content">Loading...</p>
+                </div>
+                <!-- Ticket 12 -->
+                <div class="card d-none" id="bollinger-ticket" style="display: none;">
+                    <h3>Bollinger Bands</h3>
+                    <p id="bollinger-content">Loading...</p>
+                </div>
+                <!-- Ticket 3 -->
+                <div id="ticket-52-week-high" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">52-Week High</h5>
+                        <p id="high-52-week">₹0.00</p>
+                        <p id="high-percentage-diff"></p>
                     </div>
-
-                    <!-- Ticket for RSI -->
-                    <div class="ticket" id="rsi-ticket" style="display:none;">
-                        <h3>Relative Strength Index (RSI)</h3>
-                        <p id="rsi-content">Loading...</p>
+                </div>
+                <!-- Ticket 4 -->
+                <div id="ticket-52-week-low" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">52-Week Low</h5>
+                        <p id="low-52-week">₹0.00</p>
+                        <p id="low-percentage-diff"></p>
                     </div>
-
-                    <!-- Ticket for Bollinger Bands -->
-                    <div class="ticket" id="bollinger-ticket" style="display:none;">
-                        <h3>Bollinger Bands</h3>
-                        <p id="bollinger-content">Loading...</p>
-                    </div>
-                <!--</div>-->
-
+                </div>
             </div>
         </div>
 
-
+    
 
 
 
@@ -149,6 +144,7 @@
         return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         });
+       
 
 
         let companiesData = null; // Variable to store fetched data
@@ -301,18 +297,21 @@
             if (data.success) {
                 // Display MACD Ticket
                 const macdTicket = document.getElementById('macd-ticket');
+                macdTicket.classList.remove('d-none');
                 macdTicket.style.display = 'block';
                 document.getElementById('macd-content').textContent =
                     `MACD: ${data.data.MACD.MACD.toFixed(2)}, Signal: ${data.data.MACD.Signal.toFixed(2)}`;
 
                 // Display RSI Ticket
                 const rsiTicket = document.getElementById('rsi-ticket');
+                rsiTicket.classList.remove('d-none');
                 rsiTicket.style.display = 'block';
                 document.getElementById('rsi-content').textContent =
                     `RSI: ${data.data.RSI.toFixed(2)}`;
 
                 // Display Bollinger Bands Ticket
                 const bollingerTicket = document.getElementById('bollinger-ticket');
+                bollingerTicket.classList.remove('d-none');
                 bollingerTicket.style.display = 'block';
                 document.getElementById('bollinger-content').textContent =
                     `Middle: ₹${data.data.BollingerBands.SMA20.toFixed(2)}, Upper: ₹${data.data.BollingerBands.UpperBand.toFixed(2)}, Lower: ₹${data.data.BollingerBands.LowerBand.toFixed(2)}`;
