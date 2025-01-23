@@ -15,7 +15,7 @@ class StockData(models.Model):
     cagr_5y = models.FloatField(null=True, blank=True)
     cagr_3y = models.FloatField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now=True)
-    
+
     # New fields for MACD, RSI
     macd = models.FloatField(null=True, blank=True)
     rsi = models.FloatField(null=True, blank=True)
@@ -23,6 +23,17 @@ class StockData(models.Model):
     # Bollinger Bands stored as a TextField (e.g., JSON or CSV format)
     bollinger_bands = models.TextField(null=True, blank=True)
 
+
+
+    ##new tickets
+    volatility = models.FloatField(null=True, blank=True)
+    dividend_yield = models.FloatField(null=True, blank=True)
+    dividend_per_share = models.FloatField(null=True, blank=True)
+    pe_ratio = models.FloatField(null=True, blank=True)
+    moving_average_50 = models.FloatField(null=True, blank=True)
+    moving_average_200 = models.FloatField(null=True, blank=True)
+    historical_data = models.JSONField(null=True, blank=True)
+    historical_data_last_30_days = models.JSONField(null=True, blank=True)
     def __str__(self):
         return self.symbol
 

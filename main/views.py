@@ -452,6 +452,79 @@ def fetch_stock_indicators(request):
 
 
 
+#### new###
+
+
+def fetch_kpi_data(request):
+    symbol = request.GET.get('symbol')
+    if not symbol:
+        return JsonResponse({"success": False, "error": "Symbol not provided."}, status=400)
+
+    if not symbol.endswith('.NS'):
+        symbol = f"{symbol}.NS"
+
+    try:
+        # Fetch stock data from database
+        stock_data = StockData.objects.filter(symbol=symbol).first()
+
+        if not stock_data:
+            return JsonResponse({'success': False, 'error': f"Stock data for {symbol} not found."}, status=404)
+
+        # Fetch data from Yahoo Finance if not in database
+        company = yf.Ticker(symbol)
+
+        # Volatility calculation (Standard deviation of daily returns)
+        if stock_data.volatility is None:
+            historical_data = company.history(period="1mo")['Close']
+            volatility = historical_data.pct_change().std() * (252 ** 0.5)  # Annualized volatility
+            stock_data.volatility = volatility
+            stock_data.save()
+
+        # Dividend Yield (Dividend per share / Price per share)
+        if stock_data.dividend_yield is None:
+            dividend_yield = company.info.get('dividendYield', 0)
+            stock_data.dividend_yield = dividend_yield
+            stock_data.save()
+
+        # PE Ratio (Price to earnings ratio)
+        if stock_data.pe_ratio is None:
+            pe_ratio = company.info.get('trailingPE', 0)
+            stock_data.pe_ratio = pe_ratio
+            stock_data.save()
+
+        # Moving Average (50-day and 200-day)
+        if stock_data.moving_average_50 is None or stock_data.moving_average_200 is None:
+            historical_data = company.history(period='1y')['Close']
+            moving_average_50 = historical_data.tail(50).mean()
+            moving_average_200 = historical_data.tail(200).mean()
+            stock_data.moving_average_50 = moving_average_50
+            stock_data.moving_average_200 = moving_average_200
+            stock_data.save()
+
+        # Historical data (last 30 days)
+        if stock_data.historical_data_last_30_days is None:
+            historical_data_last_30_days = company.history(period="30d")
+            stock_data.historical_data_last_30_days = historical_data_last_30_days.to_dict(orient="records")
+            stock_data.save()
+
+        # Format the result
+        result = {
+            "volatility": f"{stock_data.volatility:.2f}%",
+            "dividend_yield": f"{stock_data.dividend_yield * 100:.2f}%" if stock_data.dividend_yield else "N/A",
+            "pe_ratio": f"{stock_data.pe_ratio:.2f}" if stock_data.pe_ratio else "N/A",
+            "moving_average_50": f"{stock_data.moving_average_50:.2f}" if stock_data.moving_average_50 else "N/A",
+            "moving_average_200": f"{stock_data.moving_average_200:.2f}" if stock_data.moving_average_200 else "N/A",
+            "historical_data_last_30_days": stock_data.historical_data_last_30_days[:5]  # Displaying only the first 5 records
+        }
+
+        return JsonResponse({"success": True, "data": result})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+
+
 # # Fetch Stock Indicators (MACD, RSI, Bollinger Bands)
 # def fetch_stock_indicators(request):
 #     symbol = request.GET.get('symbol')

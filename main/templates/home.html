@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <!-- Ticket 10 -->
-                <div class="card d-none" id="macd-ticket" >
+                <div class="card d-none" id="macd-ticket">
                     <h3>Moving Average Convergence/Divergence (MACD)</h3>
                     <p id="macd-content">Loading...</p>
                 </div>
@@ -115,6 +115,57 @@
                         <p id="low-percentage-diff"></p>
                     </div>
                 </div>
+
+
+                <!--new tickets-->
+                <!-- Ticket 5 - Volatility -->
+                <div id="volatility-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Volatility</h5>
+                        <p id="volatility-content">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket 6 - Dividend Yield -->
+                <div id="dividend-yield-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Dividend Yield</h5>
+                        <p id="dividend-yield-content">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket 7 - PE Ratio -->
+                <div id="pe-ratio-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">PE Ratio</h5>
+                        <p id="pe-ratio-content">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket 8 - Moving Average (50) -->
+                <div id="moving-average-50-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">50-Day Moving Average</h5>
+                        <p id="moving-average-50-content">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket 9 - Moving Average (200) -->
+                <div id="moving-average-200-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">200-Day Moving Average</h5>
+                        <p id="moving-average-200-content">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket 10 - Historical Data (Last 30 Days) -->
+                <div id="historical-data-ticket" class="card d-none">
+                    <div class="card-body">
+                        <h5 class="card-title">Historical Data (Last 30 Days)</h5>
+                        <p id="historical-data-content">Loading...</p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -325,6 +376,8 @@
             alert('An error occurred while fetching stock indicators.');
         });
 
+      
+
 
 
         // Display 52-Week High
@@ -385,7 +438,7 @@
         lowTicket.style.backgroundColor = getColorForPercentage(lowPercentageDiff);
         }
         });
-        
+        // volume bar
         fetch(`/fetch-volume-trader-data/?symbol=${symbol}`)
         .then(response => response.json())
         .then(volumeData => {
@@ -455,15 +508,105 @@
         }
         });
 
-        
+          // Fetch and Display Stock KPIs (Volatility, Dividend Yield, PE Ratio, Moving Averages, etc.)
+          fetch(`/fetch_kpi_data/?symbol=${symbol}`)
+          .then(response => response.json())
+          .then(data => {
+          console.log('Fetched stock KPIs:', data);
+          if (data.success) {
+          // Display Volatility Ticket
+          const volatilityTicket = document.getElementById('volatility-ticket');
+          volatilityTicket.classList.remove('d-none');
+          volatilityTicket.style.display = 'block';
+          document.getElementById('volatility-content').textContent = `Volatility: ${data.data.volatility}%`;
+
+          // Display Dividend Yield Ticket
+          const dividendYieldTicket = document.getElementById('dividend-yield-ticket');
+          dividendYieldTicket.classList.remove('d-none');
+          dividendYieldTicket.style.display = 'block';
+          document.getElementById('dividend-yield-content').textContent = `Dividend Yield: ${data.data.dividend_yield}`;
+
+          // Display PE Ratio Ticket
+          const peRatioTicket = document.getElementById('pe-ratio-ticket');
+          peRatioTicket.classList.remove('d-none');
+          peRatioTicket.style.display = 'block';
+          document.getElementById('pe-ratio-content').textContent = `PE Ratio: ${data.data.pe_ratio}`;
+
+          // Display 50-Day Moving Average Ticket
+          const movingAverage50Ticket = document.getElementById('moving-average-50-ticket');
+          console.log(data);
+          movingAverage50Ticket.classList.remove('d-none');
+          movingAverage50Ticket.style.display = 'block';
+          // Validate moving_average_50
+          const movingAverage50 = parseFloat(data.data.moving_average_50);
+          if (!isNaN(movingAverage50)) {
+                document.getElementById('moving-average-50-content').textContent = `50-Day MA: ₹${movingAverage50.toFixed(2)}`;
+          } else {
+                document.getElementById('moving-average-50-content').textContent = `50-Day MA: N/A`;
+          }
+         
+
+
+          // Display 200-Day Moving Average Ticket
+            const movingAverage200Ticket = document.getElementById('moving-average-200-ticket');
+            console.log(data); // Inspect the response for debugging
+
+            movingAverage200Ticket.classList.remove('d-none');
+            movingAverage200Ticket.style.display = 'block';
+
+            // Validate moving_average_200
+            const movingAverage200 = parseFloat(data.data.moving_average_200);
+            if (!isNaN(movingAverage200)) {
+                document.getElementById('moving-average-200-content').textContent = `200-Day MA: ₹${movingAverage200.toFixed(2)}`;
+            } else {
+                document.getElementById('moving-average-200-content').textContent = `200-Day MA: N/A`;
+            }
+
+        // Display Historical Data (Last 30 days) Ticket
+        const historicalDataTicket = document.getElementById('historical-data-ticket');
+        historicalDataTicket.classList.remove('d-none');
+        historicalDataTicket.style.display = 'block';
+        document.getElementById('historical-data-content').textContent = 'Last 30 days data loaded';
+
+        } else {
+            console.error('Error fetching stock KPIs:', data.error);
+            alert('Could not fetch stock KPIs.');
+        }
+        })
+        .catch(error => {
+            console.error('Error fetching stock KPIs:', error);
+            alert('An error occurred while fetching stock KPIs.');
+        });
+
+
+
+        // Function to calculate color for volatility (similar approach as for 52-week high)
+        const getColorForVolatility = (volatility) => {
+        let h = volatility <= 50 ? 0 : 120;  // Red for low volatility, Green for high volatility
+        let l = 50;
+
+        if (volatility <= 15) l = 25;                   // Darkest red
+        else if (volatility <= 25) l = 35;              // Lighter red
+        else if (volatility <= 35) l = 45;
+        else if (volatility <= 45) l = 50;              // Lighter red
+        else if (volatility <= 50) l = 60;              // Lighter red
+        else if (volatility <= 65) l = 50 + (volatility - 50) * 0.6; // Lighter green
+        else if (volatility <= 75) l = 60 + (volatility - 65) * 0.5; // Lighter green
+        else if (volatility <= 85) l = 70 + (volatility - 75) * 0.3; // Lighter green
+        else l = 15;                                     // Darkest green
+
+            return `hsl(${h}, 100%, ${l}%)`;
+        };
+
+        // Apply color to the volatility ticket (or any other ticket based on logic)
+        const volatilityPercentage = parseFloat(data.data.volatility);
+        document.getElementById('volatility-ticket').style.backgroundColor = getColorForVolatility(volatilityPercentage);
 
 
        
 
-   
-
-       
         
+
         }
         }
         });

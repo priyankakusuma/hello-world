@@ -152,7 +152,7 @@ header {
 /* Volume Trader Ticket Styling */
 #volume-trader-ticket {
     padding: 15px; /* Internal padding */
-    background-color: wheat; /* Match the card background color */
+    background-color: deepskyblue; /* Match the card background color */
     border-radius: 15px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     text-align: center; /* Center-align content */
@@ -256,6 +256,53 @@ header {
         border-radius: 10px;
         font-weight: normal;
     }
+
+/* General Styling for the New Tickets */
+#volatility-ticket, #dividend-yield-ticket, #pe-ratio-ticket, #moving-average-50-ticket, #moving-average-200-ticket, #historical-data-ticket {
+    background-color: deepskyblue; /* Match the existing ticket background */
+    border: 1px solid #ddd; /* Border to match existing design */
+    padding: 15px; /* Padding for internal spacing */
+    border-radius: 15px; /* Rounded corners */
+    text-align: center; /* Center-align text */
+    flex: 1 1 calc(25% - 1rem); /* Ensure they are responsive in a 4-column layout */
+    min-width: 250px; /* Ensure minimum size */
+    max-width: 300px; /* Prevent it from growing too wide */
+    height: 200px; /* Consistent height */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+    /* Title Styling for Each Ticket */
+    #volatility-ticket h5, #dividend-yield-ticket h5, #pe-ratio-ticket h5, #moving-average-50-ticket h5, #moving-average-200-ticket h5, #historical-data-ticket h5 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 10px;
+        background-color: #f8f9fa; /* Light background for the header */
+        padding: 10px;
+        border-radius: 10px; /* Rounded corners */
+    }
+
+/* Info Text Styling */
+#volatility-content, #dividend-yield-content, #pe-ratio-content, #moving-average-50-content, #moving-average-200-content, #historical-data-content {
+    font-size: 1rem;
+    color: black;
+    margin-top: 10px;
+    background-color: #f8f9fa; /* Light background for the content */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners */
+    font-weight: normal;
+}
+
+/* Additional Styling if Needed */
+#volatility-ticket p, #dividend-yield-ticket p, #pe-ratio-ticket p, #moving-average-50-ticket p, #moving-average-200-ticket p, #historical-data-ticket p {
+    font-size: 1rem;
+    color: black;
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: normal;
+}
 
 
 

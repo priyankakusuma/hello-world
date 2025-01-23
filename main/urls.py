@@ -14,6 +14,7 @@ urlpatterns = [
     # path('company/<str:symbol>/pump_or_dump/', views.fetch_pump_or_dump, name='fetch_pump_or_dump'),
     path('company/pump_or_dump/', views.fetch_pump_or_dump, name='fetch_pump_or_dump'),
     path('fetch-stock-indicators/', views.fetch_stock_indicators, name='fetch_stock_indicators'),
+    path('fetch_kpi_data/', views.fetch_kpi_data, name='fetch_kpi_data'),
 
    
 
