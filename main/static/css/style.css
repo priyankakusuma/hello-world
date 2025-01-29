@@ -1,6 +1,16 @@
 
+#results {
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+
+
+
+/*
 * {
-    box-sizing: border-box; /* Ensure consistent box-sizing */
+    box-sizing: border-box;  Ensure consistent box-sizing 
 }
 
 
@@ -55,70 +65,69 @@ header {
     display: flex;
     padding: 20px;
 }
+.d-none {
+    display: none !important;
+}
 
+ Container for the tickets 
 .tickets-container {
+    padding: 20px;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: space-between;
+    gap: 20px;
 }
 
+ Grid layout for the tickets 
 .tickets-grid {
-    display: flex;
-    flex-wrap: wrap;
-    /*    gap: 20px;*/
-    gap: 1rem;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
 
-    .tickets-grid .card {
-        /*background-color: wheat;
-        color: black;
-        border-radius: 50px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
-        /*flex: 1 1 calc(25% - 20px);*/ /* Four columns */
-        /*min-width: 200px;*/
-/*        text-align: center;*/
-/*        flex: 0 0 23%;*/
-        flex: 1 1 calc(25% - 1rem); 
-        min-width: 250px; /* Ensure tickets have consistent size */
-        max-width: 300px; /* Prevent tickets from becoming too wide */
-        height: 200px; /* Ensure consistent height */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        background-color: deepskyblue;
-        color: black;
-        border-radius: 15px;
-        text-align: center;
-        padding: 15px; /* Padding for internal spacing */
-    }
-
-    .tickets-grid .card-body {
-/*        padding: 20px;*/
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
-
-/* Specific Styling for 52-Week High */
-#ticket-52-week-high {
-    transition: background-color 0.5s ease;
-    border-radius: 10px;
-    order: 99;
-    padding : 15px;
+ Individual ticket card 
+.card {
+    background-color: deepskyblue;
+    border-radius: 12px;  Slightly curvy borders 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Soft shadow 
+    overflow: hidden;
+    transition: transform 0.3s ease;  Smooth hover effect 
 }
 
-#ticket-52-week-low {
-    transition: background-color 0.5s ease;
-    border-radius: 10px;
-    order: 99;
+ Card body 
+.card-body {
     padding: 15px;
+    color: white;
 }
 
-#high-percentage-diff, #low-percentage-diff {
+ Title inside the ticket 
+.card-title {
+    font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 10px;
 }
+
+ Paragraph inside the ticket 
+.card-body p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+ Hover effect for card 
+.card:hover {
+    transform: translateY(-5px);  Slight lift effect on hover 
+}
+
+ Make the ticket card hidden by default 
+
+
+ Add some space between cards 
+.card {
+    margin-bottom: 15px;
+}
+
+
 
 .results-container {
     flex: 1;
@@ -147,94 +156,161 @@ header {
         #results .dropdown-item:hover {
             background-color: #f8f9fa;
         }
+*/
 
-
-/* Volume Trader Ticket Styling */
-#volume-trader-ticket {
-    padding: 15px; /* Internal padding */
-    background-color: deepskyblue; /* Match the card background color */
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    text-align: center; /* Center-align content */
-    flex: 1 1 calc(25% - 1rem); /* Ensure it fits the layout for 4 columns */
-    min-width: 250px;  
-    max-width: 300px;
-    height: 200px; /* Consistent height for all tickets */
+/*
+.tickets-container {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Space out content */
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
 }
 
-    /* Title Styling */
+.tickets-grid {
+    display: flex;
+    flex-wrap: wrap;
+        gap: 20px;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+    .tickets-grid .card {
+        background-color: wheat;
+        color: black;
+        border-radius: 50px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1 1 calc(25% - 20px);  Four columns 
+        min-width: 200px;
+        text-align: center;
+        flex: 0 0 23%;
+        flex: 1 1 calc(25% - 1rem); 
+        min-width: 250px;  Ensure tickets have consistent size 
+        max-width: 300px;  Prevent tickets from becoming too wide 
+        height: 200px;  Ensure consistent height 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: deepskyblue;
+        color: black;
+        border-radius: 15px;
+        text-align: center;
+        padding: 15px;  Padding for internal spacing 
+    }
+
+    .tickets-grid .card-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+ Specific Styling for 52-Week High 
+#ticket-52-week-high {
+    transition: background-color 0.5s ease;
+    border-radius: 10px;
+    order: 99;
+    padding : 15px;
+}
+
+#ticket-52-week-low {
+    transition: background-color 0.5s ease;
+    border-radius: 10px;
+    order: 99;
+    padding: 15px;
+}
+
+#high-percentage-diff, #low-percentage-diff {
+    font-weight: bold;
+}*/
+
+
+
+ /*Volume Trader Ticket Styling 
+#volume-trader-ticket {
+    padding: 15px;  Internal padding 
+    background-color: deepskyblue;  Match the card background color 
+    border-radius: 15px;  Rounded corners 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  Subtle shadow for depth 
+    text-align: center;  Center-align content 
+    flex: 1 1 calc(25% - 1rem);  Ensure it fits the layout for 4 columns 
+    min-width: 250px;  
+    max-width: 300px;
+    height: 200px;  Consistent height for all tickets 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  Space out content 
+}
+
+     Title Styling 
     #volume-trader-ticket .card-title {
         font-size: 1.2rem;
         font-weight: bold;
         margin-bottom: 10px;
     }
 
-/* Info Text Styling */
+ Info Text Styling 
 #volume-trader-info {
     font-size: 1rem;
     color: black;
 }
 
-/* Progress Bar Container */
+ Progress Bar Container 
 #volume-trader-ticket .progress {
-    height: 20px; /* Progress bar height */
-    border-radius: 10px; /* Rounded corners for progress bar */
-    background-color: #f3f3f3; /* Light gray background */
-    margin-top: 10px; /* Space above the progress bar */
-    position: relative; /* To position percentage text */
-    /*overflow: hidden;*/ /* Prevent content overflow */
-    width: 100%; /* Ensure progress bar takes full width */
+    height: 20px;  Progress bar height 
+    border-radius: 10px;  Rounded corners for progress bar 
+    background-color: #f3f3f3;  Light gray background 
+    margin-top: 10px;  Space above the progress bar 
+    position: relative;  To position percentage text 
+    overflow: hidden;  Prevent content overflow 
+    width: 100%;  Ensure progress bar takes full width 
 }
 
-/* Progress Bar */
+ Progress Bar 
 #volume-trader-ticket .progress-bar {
-    transition: width 0.5s ease; /* Smooth width transition */
-    border-radius: 10px; /* Rounded edges */
-    height: 100%; /* Full height of the progress container */
-    width: 0; /* Initial width */
+    transition: width 0.5s ease;  Smooth width transition 
+    border-radius: 10px;  Rounded edges 
+    height: 100%;  Full height of the progress container 
+    width: 0;  Initial width 
 }
 
-    /* Color Classes */
+     Color Classes 
     #volume-trader-ticket .progress-bar.bg-success {
-        background-color: #28a745; /* Green for success */
+        background-color: #28a745;  Green for success 
     }
 
     #volume-trader-ticket .progress-bar.bg-danger {
-        background-color: #dc3545; /* Red for danger */
+        background-color: #dc3545;  Red for danger 
     }
 
-/* Percentage Text Inside Progress Bar */
+ Percentage Text Inside Progress Bar 
 #volume-trader-ticket .percentage-text {
     position: absolute;
     width: 100%;
     text-align: center;
-    line-height: 20px; /* Match the progress bar height */
+    line-height: 20px;  Match the progress bar height 
     color: black;
     font-weight: bold;
 }
 
 
 
-/* General Ticket Styling */
+ General Ticket Styling 
     #macd-ticket, #rsi-ticket, #bollinger-ticket {
         background-color: deepskyblue;
         border: 1px solid #ddd;
         padding: 15px;
-/*        margin: 11px 0;*/
+        margin: 11px 0;
         border-radius: 15px;
         text-align: center;
         flex: 1 1 calc(25% - 1rem);
-        /*    flex: 0 0 23%;*/
+            flex: 0 0 23%;
         min-width: 250px;
         max-width: 300px;
         height: 200px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     
-        /*    justify-content: space-between;*/
-        /*    flex-wrap: wrap;*/
+            justify-content: space-between;
+            flex-wrap: wrap;
     }
 
     #macd-ticket h3, #rsi-ticket h3, #bollinger-ticket h3 {
@@ -257,44 +333,44 @@ header {
         font-weight: normal;
     }
 
-/* General Styling for the New Tickets */
-#volatility-ticket, #dividend-yield-ticket, #pe-ratio-ticket, #moving-average-50-ticket, #moving-average-200-ticket, #historical-data-ticket {
-    background-color: deepskyblue; /* Match the existing ticket background */
-    border: 1px solid #ddd; /* Border to match existing design */
-    padding: 15px; /* Padding for internal spacing */
-    border-radius: 15px; /* Rounded corners */
-    text-align: center; /* Center-align text */
-    flex: 1 1 calc(25% - 1rem); /* Ensure they are responsive in a 4-column layout */
-    min-width: 250px; /* Ensure minimum size */
-    max-width: 300px; /* Prevent it from growing too wide */
-    height: 200px; /* Consistent height */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+ General Styling for the New Tickets 
+#volatility-ticket, #dividend-yield-ticket, #pe-ratio-ticket, #moving-average-50-ticket, #moving-average-200-ticket{
+    background-color: deepskyblue;  Match the existing ticket background 
+    border: 1px solid #ddd;  Border to match existing design 
+    padding: 15px;  Padding for internal spacing 
+    border-radius: 15px;  Rounded corners 
+    text-align: center;  Center-align text 
+    flex: 1 1 calc(25% - 1rem);  Ensure they are responsive in a 4-column layout 
+    min-width: 250px;  Ensure minimum size 
+    max-width: 300px;  Prevent it from growing too wide 
+    height: 200px;  Consistent height 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  Subtle shadow 
 }
 
-    /* Title Styling for Each Ticket */
-    #volatility-ticket h5, #dividend-yield-ticket h5, #pe-ratio-ticket h5, #moving-average-50-ticket h5, #moving-average-200-ticket h5, #historical-data-ticket h5 {
+     Title Styling for Each Ticket 
+    #volatility-ticket h5, #dividend-yield-ticket h5, #pe-ratio-ticket h5, #moving-average-50-ticket h5, #moving-average-200-ticket h5{
         font-size: 1.2rem;
         font-weight: bold;
         color: #343a40;
         margin-bottom: 10px;
-        background-color: #f8f9fa; /* Light background for the header */
+        background-color: #f8f9fa;  Light background for the header 
         padding: 10px;
-        border-radius: 10px; /* Rounded corners */
+        border-radius: 10px;  Rounded corners 
     }
 
-/* Info Text Styling */
-#volatility-content, #dividend-yield-content, #pe-ratio-content, #moving-average-50-content, #moving-average-200-content, #historical-data-content {
+ Info Text Styling 
+#volatility-content, #dividend-yield-content, #pe-ratio-content, #moving-average-50-content, #moving-average-200-content{
     font-size: 1rem;
     color: black;
     margin-top: 10px;
-    background-color: #f8f9fa; /* Light background for the content */
+    background-color: #f8f9fa;  Light background for the content 
     padding: 10px;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;  Rounded corners 
     font-weight: normal;
 }
 
-/* Additional Styling if Needed */
-#volatility-ticket p, #dividend-yield-ticket p, #pe-ratio-ticket p, #moving-average-50-ticket p, #moving-average-200-ticket p, #historical-data-ticket p {
+ Additional Styling if Needed 
+#volatility-ticket p, #dividend-yield-ticket p, #pe-ratio-ticket p, #moving-average-50-ticket p, #moving-average-200-ticket p {
     font-size: 1rem;
     color: black;
     margin-top: 10px;
@@ -307,7 +383,7 @@ header {
 
 
 
-
+*/
 
 
 
