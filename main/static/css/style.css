@@ -69,14 +69,14 @@ header {
 }
 
 /* Dark Mode */
-[data-bs-theme="dark"] {
+/*[data-bs-theme="dark"] {
     background-color: #121212;
     color: white;
 }
 
 .toggle-mode {
     cursor: pointer;
-}
+}*/
 
 
 /* Tickets Styling */
@@ -146,7 +146,7 @@ header {
 }
 
 /* Specific Adjustments for Progress Bars */
-.progress {
+/*.progress {
     width: 100%;
     margin-top: 10px;
     color:chartreuse;
@@ -156,16 +156,37 @@ header {
     width: 10%;
     transition: width 0.5s ease-in-out;
     
-}
+}*/
 
 .percentage-text {
     position: absolute;
     bottom: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color:black;
+    color:white;
 }
 
+.dark-theme {
+    background-color: #121212;
+    color: white;
+}
+
+    .dark-theme .bg-dark {
+        background-color: #1e1e1e !important;
+    }
+
+    .dark-theme .dropdown-menu {
+        background-color: #333;
+        color: white;
+    }
+
+    .dark-theme .form-control {
+        background-color: #222;
+        color: white;
+        border: 1px solid #555;
+    }
+
+/* Ensure tickets remain in their original color */
 
 
 

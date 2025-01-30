@@ -145,6 +145,19 @@ def fetch_kpi_data(request):
     market_cap = company_info.get("marketCap", 0) / 10**7  # Convert to Crore
     response_data["market_cap"] = f"{market_cap:,.2f} Cr" if market_cap else "N/A"
 
+    # Ensure current stock price is valid
+    if current_stock_price and high_52_week and low_52_week:
+        high_diff_percentage = ((high_52_week - current_stock_price) / high_52_week) * 100
+        low_diff_percentage = ((current_stock_price - low_52_week) / low_52_week) * 100
+    else:
+        high_diff_percentage = None
+        low_diff_percentage = None
+
+    response_data["high_diff_percentage"] = round(high_diff_percentage, 2) if high_diff_percentage is not None else None
+    response_data["low_diff_percentage"] = round(low_diff_percentage, 2) if low_diff_percentage is not None else None
+    print(f"High 52-Week: {high_52_week}, Low 52-Week: {low_52_week}, Current Price: {current_stock_price}")
+    print(f"High Difference Percentage: {high_diff_percentage}")
+    print(f"Low Difference Percentage: {low_diff_percentage}")
 
     # Volume
     try:
