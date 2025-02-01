@@ -7,8 +7,7 @@ class StockData(models.Model):
     symbol = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now=True)
 
-    # class Meta:
-    #     db_table = 'ListOfCompanies'
+
 
     def __str__(self):
         return f"{self.company_name} ({self.symbol})"

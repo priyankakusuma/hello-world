@@ -68,15 +68,7 @@ header {
     white-space: nowrap; /* Ensures text fits properly */
 }
 
-/* Dark Mode */
-/*[data-bs-theme="dark"] {
-    background-color: #121212;
-    color: white;
-}
 
-.toggle-mode {
-    cursor: pointer;
-}*/
 
 
 /* Tickets Styling */
@@ -114,7 +106,7 @@ header {
     justify-content: center; /* Vertically center the content */
     align-items: center; /* Horizontally center the content */
 
-    width: 100%; /* Fixed width */
+    width: 100% ;/* Fixed width */
     height: 100%; /* Fixed height */
 
     box-sizing: border-box; /* Ensure padding is included in total width/height */
@@ -145,18 +137,7 @@ header {
     padding: 0;
 }
 
-/* Specific Adjustments for Progress Bars */
-/*.progress {
-    width: 100%;
-    margin-top: 10px;
-    color:chartreuse;
-}
 
-.progress-bar {
-    width: 10%;
-    transition: width 0.5s ease-in-out;
-    
-}*/
 
 .percentage-text {
     position: absolute;
