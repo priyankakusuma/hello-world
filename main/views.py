@@ -187,34 +187,7 @@ def fetch_kpi_data(request):
     response_data["low_diff_percentage"] = round(low_diff_percentage, 2) if low_diff_percentage is not None else None
 
 
-    # # Volume
-    # try:
-    #     # Fetch the current volume and 52-week average volume
-    #     current_volume = stock_history['Volume'].iloc[-1] if not stock_history['Volume'].empty else None
-    #     average_volume_52_week = stock_history['Volume'].mean() if not stock_history['Volume'].empty else None
-       
-
-    #     # print(f"Current Volume: {current_volume}, Average Volume: {average_volume_52_week}")
-    
-    #     if current_volume is not None and average_volume_52_week is not None and average_volume_52_week != 0:
-    #         # New logic for volume calculation
-    #         current_volume = int(current_volume)
-    #         average_volume_52_week = int(average_volume_52_week)
-
-    #         # Calculate the percentage difference
-    #         percentage_difference = ((current_volume - average_volume_52_week) / average_volume_52_week) * 100 if average_volume_52_week != 0 else 0
-    #         response_data["current_volume"] = current_volume
-    #         response_data["average_volume_52_week"] = average_volume_52_week
-    #         response_data["percentage_difference"] = round(percentage_difference, 2)
-
-    #     else:
-    #         response_data["percentage_difference"] = None
-    #         response_data["average_volume_52_week"] = 'N/A'
-    # except Exception as e:
-    #     print(f"Error calculating volume traded for {symbol}: {e}")
-    #     response_data["percentage_difference"] = None
-
-
+  
 
     # CAGR (5 years)
     try:
@@ -251,6 +224,9 @@ def fetch_kpi_data(request):
     response_data["dividend_yield"] = round(dividend_yield*100, 4) if dividend_yield else None
 
     # PE Ratio
+    # eps = company_info.get("epsTrailingTwelveMonths")
+    # pe_ratio = current_stock_price / eps if eps and eps > 0 else None
+    # response_data["pe_ratio"] = round(pe_ratio, 2) if pe_ratio else "N/A"
     pe_ratio = company_info.get("trailingPE", 0)
     response_data["pe_ratio"] = round(pe_ratio, 2) if pe_ratio else None
 
@@ -292,60 +268,6 @@ def fetch_kpi_data(request):
     # print(response_data)  # Debugging the response data
 
     return JsonResponse({"success": True, **response_data})
-
-
-# def fetch_nse_data(request):
-#     print("Fetching NSE Data Function Called")
-    
-
-#     # 1️⃣ Check if companies are already in the database and updated within 24 hours
-#     last_entry = StockData.objects.order_by('-timestamp').first()
-    
-#     if last_entry and last_entry.timestamp > now() - timedelta(hours=24):
-#         # print("Serving company data from database, not API")
-#         company_list = [{'name': entry.company_name, 'symbol': entry.symbol} for entry in StockData.objects.all()]
-#         # print(f"Company List from DB: {company_list[:50]}")  # Debugging the list
-#         return JsonResponse({"success": True, "data": company_list})
-
-#     # 2️⃣ If database is empty or outdated, fetch fresh data from NSE API
-#     try:
-#         print("Fetching fresh data from NSE API")
-#         nse_url = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv"
-#         headers = {'User-Agent': 'Mozilla/5.0'}
-
-#         response = requests.get(nse_url, headers=headers)
-#         response.raise_for_status()
-
-#         df_nse = pd.read_csv(io.BytesIO(response.content))
-
-#         # Ensure required columns exist
-#         if "SYMBOL" not in df_nse.columns or "NAME OF COMPANY" not in df_nse.columns:
-#             return JsonResponse({"success": False, "error": "Missing required columns in CSV file."})
-
-#         # 3️⃣ Process and store in the database - save only company_name and symbol
-#         StockData.objects.all().delete()  # Clear old data
-#         # print("Old data cleared.")
-
-#         company_list = []
-#         for _, row in df_nse.iterrows():
-#             name = row["NAME OF COMPANY"]
-#             symbol = row["SYMBOL"]
-#             company_list.append(StockData(company_name=name, symbol=symbol))
-
-#         # Bulk insert companies into the database
-#         StockData.objects.bulk_create(company_list)
-#         # print(f"{len(company_list)} companies added to the database.")
-
-#         # Retrieve data from the database again after insert
-#         company_list = [{'name': entry.company_name, 'symbol': entry.symbol} for entry in StockData.objects.all()]
-#         # print(f"Fetched company data: {company_list[:2]}")  # Debugging the list
-
-#         return JsonResponse({"success": True, "data": company_list})
-
-#     except Exception as e:
-#         logger.error(f"Error fetching NSE data: {str(e)}")
-#         return JsonResponse({'success': False, 'error': f'Error: {str(e)}'})
-
 
 
 # def fetch_kpi_data(request):

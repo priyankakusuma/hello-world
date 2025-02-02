@@ -81,71 +81,168 @@ header {
   
 }
 
+/* Ticket Grid - Ensures No Extra Spacing */
 .tickets-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 20px; /* Spacing between tickets */
-    padding: 20px;
-    max-width: 1200px; /* Ensures content remains centered */
-    width: 100%;
-    max-width: none;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-gap: 5px; /* Small gap for cleaner look */
+    padding: 0px;
     box-sizing: border-box;
-    grid-auto-rows: 200px;
+    grid-auto-rows: 120px;
 }
 
-/* Ticket Card Styling */
+/* Enhanced Ticket Styling */
 .card {
-    background-color: deepskyblue !important; /* Ensure deep sky blue */
-    color: white !important; /* Text should be white */
-    border-radius: 10px;
+    background: linear-gradient(to bottom right, #1E90FF, #00BFFF); /* Gradient background */
+    color: white !important;
+    border-radius: 12px; /* Slightly curvier */
     text-align: center !important;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Vertically center the content */
-    align-items: center; /* Horizontally center the content */
-
-    width: 100% ;/* Fixed width */
-    height: 100%; /* Fixed height */
-
-    box-sizing: border-box; /* Ensure padding is included in total width/height */
-}
-
-/* Card Body Styling */
-.card-body {
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 15px; /* Ensure consistent padding inside card */
-    height: 100%; /* Ensure card body fills the card height */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease-in-out;
 }
 
-/* Title and Paragraph Styling */
+    /* Glass Effect (Optional - Comment out if not needed) */
+    .card.glass-effect {
+        background: rgba(30, 144, 255, 0.2); /* Light transparent blue */
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hover Effect - Scale & Glow */
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 5px 5px 20px rgba(0, 191, 255, 0.5); /* Glow effect */
+    }
+
+    /* Gradient Border Animation */
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        padding: 2px;
+        background: linear-gradient(135deg, #00BFFF, #1E90FF);
+        -webkit-mask: linear-gradient(white, white) content-box, linear-gradient(white, white);
+        -webkit-mask-composite: destination-out;
+        mask-composite: exclude;
+    }
+
+/* Animated Entry */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Card Title Enhancements */
 .card-title {
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Percentage Text Enhancement */
+.percentage-text {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Dark Theme Adjustments */
+.dark-theme .card {
+    background: linear-gradient(to bottom right, #1e3c72, #2a5298) !important; /* Darker theme gradient */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+/*.tickets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  4 columns*/ 
+/*        gap: 10px;  #Spacing between tickets */
+    /*padding: 0px;*/
+/*    max-width: 1200px; 
+    width: 100%;
+    max-width: none;*/
+    /*box-sizing: border-box;
+    grid-auto-rows: 120px;*/
+    /*grid-gap: 0;*/
+/*}*/
+
+
+
+/* Ticket Card Styling */
+/*.card {
+    background-color: deepskyblue !important;*/ /* Ensure deep sky blue */
+    /*color: white !important;*/ /* Text should be white */
+    /*border-radius: 10px;
+    text-align: center !important;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);*/ /* Soft shadow */
+
+/*    display: flex;*/
+    /*flex-direction: column;
+    justify-content: center;*/ /* Vertically center the content */
+    /*align-items: center;*/ 
+
+    /*width: 100% ; Fixed width 
+    height: 60% !important  ;
+
+    box-sizing: border-box; 
+}*/
+
+/* Card Body Styling */
+/*.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;*/
+    /*padding: 15px;*/ /* Ensure consistent padding inside card */
+    /*height: 100%;*/ /* Ensure card body fills the card height */
+/*}*/
+/*.card + .card {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}*/
+
+/* Title and Paragraph Styling */
+/*.card-title {
     font-size: 16px;
     font-weight: bold;
-    margin: 0; /* Remove unwanted margin */
-    padding: 0;
+    margin: 0;*/ /* Remove unwanted margin */
+    /*padding: 0;
 }
 
 .card p {
     font-size: 14px;
     margin-top: 5px;
-    margin: 0; /* Remove unwanted margin */
-    padding: 0;
-}
+    margin: 0;*/ /* Remove unwanted margin */
+    /*padding: 0;
+}*/
 
 
 
-.percentage-text {
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color:white;
-}
 
 .dark-theme {
     background-color: #121212;
@@ -168,11 +265,59 @@ header {
     }
 
 /* Ensure tickets remain in their original color */
+/* Style for the logo container */
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #1E2A47; /* Dark background */
+    padding: 12px 25px;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
 
+/* Style for the logo text with gradient and shadow */
+.logo {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 30px; /* Larger size */
+    background: linear-gradient(to right, #1E90FF, #32CD32); /* Gradient from blue to green */
+    -webkit-background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    transition: transform 0.3s ease;
+}
 
+    /* Hover effects */
+    .logo:hover {
+        transform: scale(1.1); /* Slightly enlarge the logo */
+    }
 
+.stalk:hover {
+    color: #FF6347; /* Hover color for 'Stalk' */
+}
 
+.kpi:hover {
+    color: #FFD700; /* Hover color for 'KPi' */
+}
 
+/* Logo animation on page load */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    animation: fadeIn 1s ease-out;
+}
 
 
 

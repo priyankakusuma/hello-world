@@ -17,7 +17,14 @@
 </head>
 <body data-bs-theme="light">
     <header class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
-        <a href="#" class="text-white">Home</a>
+        <!--<a href="#" class="text-white">Home</a>-->
+        <!--<a href="javascript:location.reload();" class="ltext-white">Home</a>-->
+        <div class="logo-container">
+            <a href="javascript:location.reload();" class="logo">
+                <span class="stalk">Stalk</span><span class="kpi">KPI's</span>
+            </a>
+        </div>
+
         <div class="d-flex justify-content-center align-items-center w-100">
             <div class="search-bar-container position-relative">
                 <input type="text" id="search-bar" placeholder="Search..." class="form-control" autocomplete="off">
@@ -45,7 +52,9 @@
                         <p id="market-cap-value">₹0</p>
                     </div>
                 </div>
-
+                <!--<div id="blank" class="card d-none">
+        <div class="card-body"></div>
+    </div>-->
                 <!-- Ticket 5 -->
                 <div id="ticket-cagr-5" class="card d-none">
                     <div class="card-body">
@@ -53,6 +62,9 @@
                         <p id="cagr-5-value">0.00%</p>
                     </div>
                 </div>
+                <!--<div id="blank" class="card d-none">
+        <div class="card-body"></div>
+    </div>-->
                 <!-- Ticket 6 -->
                 <div id="ticket-cagr-3" class="card d-none">
                     <div class="card-body">
@@ -60,6 +72,8 @@
                         <p id="cagr-3-value">0.00%</p>
                     </div>
                 </div>
+
+                <!-- Blank Ticket 1 -->
                 <!-- Ticket 7 -->
                 <div id="volume-trader-ticket" class="card d-none">
                     <div class="card-body">
@@ -68,6 +82,13 @@
                         <!--<span id="percentage-text" class="percentage-text">0%</span>-->
 
                     </div>
+                </div>
+                <div id="blank" class="card d-none">
+                    <div class="card-body"></div>
+                </div>
+                <div id="blank" class="card d-none">
+                    <div class="card-body"></div>
+                    <h5 class="card-title">Advertise here..</h5>
                 </div>
 
                 <!-- Ticket 10 -->
@@ -89,6 +110,9 @@
 
 
                 </div>
+                <!--<div id="blank" class="card d-none">
+        <div class="card-body"></div>
+    </div>-->
                 <!-- Ticket 12 -->
                 <div id="bollinger-ticket" class="card d-none">
                     <div class="card-body">
@@ -97,6 +121,9 @@
 
                     </div>
                 </div>
+                <!--<div id="blank" class="card d-none">
+        <div class="card-body"></div>
+    </div>-->
                 <!-- Ticket 3 -->
                 <div id="ticket-52-week-high" class="card d-none">
                     <div class="card-body">
@@ -123,7 +150,14 @@
                         <p id="volatility-content">Loading...</p>
                     </div>
                 </div>
+                <div id="blank" class="card d-none">
+                    <div class="card-body"></div>
+                </div>
 
+                <!-- Blank Ticket 2 -->
+                <div id="blank" class="card d-none">
+                    <div class="card-body"></div>
+                </div>
                 <!-- Ticket 6 - Dividend Yield -->
                 <div id="dividend-yield-ticket" class="card d-none">
                     <div class="card-body">
@@ -131,6 +165,7 @@
                         <p id="dividend-yield-content">Loading...</p>
                     </div>
                 </div>
+               
 
                 <!-- Ticket 7 - PE Ratio -->
                 <div id="pe-ratio-ticket" class="card d-none">
@@ -139,7 +174,7 @@
                         <p id="pe-ratio-content">Loading...</p>
                     </div>
                 </div>
-
+                
                 <!-- Ticket 8 - Moving Average (50) -->
                 <div id="moving-average-50-ticket" class="card d-none">
                     <div class="card-body">
@@ -147,6 +182,7 @@
                         <p id="moving-average-50-content">Loading...</p>
                     </div>
                 </div>
+                
 
 
 
@@ -157,6 +193,7 @@
                         <p id="moving-average-200-content">Loading...</p>
                     </div>
                 </div>
+               
 
                 <div id="roe" class="card d-none">
                     <div class="card-body">
@@ -273,8 +310,9 @@
         document.getElementById("market-cap-value").textContent = `₹${data.market_cap}`;
         document.getElementById("cagr-5-value").textContent = `${data.cagr_5y}%`;
         document.getElementById("cagr-3-value").textContent = `${data.cagr_3y}%`;
-        document.getElementById("volume-trader-info").textContent = `Volume: ${data.average_volume_52_week ?? 'N/A'}`;
+        document.getElementById("volume-trader-info").textContent = `${data.average_volume_52_week ?? 'N/A'}`;
         document.getElementById("roe-content").textContent = `${data.roe ?? 'N/A'}`;
+        document.getElementById("blank");
         // Update the progress bar and percentage
         
         document.getElementById("high-52-week").textContent = `₹${data.high_52_week}`;
