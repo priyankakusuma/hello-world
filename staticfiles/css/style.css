@@ -1,0 +1,289 @@
+
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Menu Bar */
+header {
+    background-color: darkblue !important;
+    padding: 10px 20px;
+}
+
+/* Search Bar Container */
+.search-bar-container {
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+    .search-bar-container input {
+        width: 60%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        text-align:center;
+    }
+
+/* Dropdown Menu - Positioned Below Search Bar */
+#results {
+    width: 60%;
+    position: absolute;
+    top: 100%; /* Aligns right below the search bar */
+    left: 0;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none;
+    max-height: 250px; /* Scrollable if too many items */
+    overflow-y: auto;
+    padding: 5px 0;
+}
+
+    #results li {
+        display: block;
+        padding: 8px 12px;
+        cursor: pointer;
+        width: 100%; /* Ensures items stay inside the dropdown */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds "..." if text is too long */
+        white-space: nowrap;
+    }
+
+        /* Show Full Name on Hover */
+        #results li:hover {
+            background-color: lightgray;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+#create-api-button {
+    height: 40px; /* Same height as the search bar */
+    padding: 8px 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    white-space: nowrap; /* Ensures text fits properly */
+}
+/* Contact Button Styling */
+
+/* Tickets Styling */
+.tickets-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Ticket Grid - Ensures No Extra Spacing */
+.tickets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-gap: 5px; /* Small gap for cleaner look */
+    padding: 0px;
+    box-sizing: border-box;
+    grid-auto-rows: 120px;
+}
+
+/* Enhanced Ticket Styling */
+.card {
+    background: linear-gradient(to bottom right, #1E90FF, #00BFFF); /* Gradient background */
+    color: white !important;
+    border-radius: 12px; /* Slightly curvier */
+    text-align: center !important;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+#blank .card-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding: 100px;
+    text-align: center;
+}
+
+
+    /* Glass Effect (Optional - Comment out if not needed) */
+    .card.glass-effect {
+        background: rgba(30, 144, 255, 0.2); /* Light transparent blue */
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hover Effect - Scale & Glow */
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 5px 5px 20px rgba(0, 191, 255, 0.5); /* Glow effect */
+    }
+
+    /* Gradient Border Animation */
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        padding: 2px;
+        background: linear-gradient(135deg, #00BFFF, #1E90FF);
+        -webkit-mask: linear-gradient(white, white) content-box, linear-gradient(white, white);
+        -webkit-mask-composite: destination-out;
+        mask-composite: exclude;
+    }
+
+
+
+
+
+   
+
+
+/* Animated Entry */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Card Title Enhancements */
+.card-title {
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+
+/* Percentage Text Enhancement */
+.percentage-text {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+
+
+/* Dark Theme Adjustments */
+.dark-theme .card {
+    background: linear-gradient(to bottom right, #1e3c72, #2a5298) !important; /* Darker theme gradient */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.dark-theme {
+    background-color: #121212;
+    color: white;
+}
+
+    .dark-theme .bg-dark {
+        background-color: #1e1e1e !important;
+    }
+
+    .dark-theme .dropdown-menu {
+        background-color: #333;
+        color: white;
+    }
+
+    .dark-theme .form-control {
+        background-color: #222;
+        color: white;
+        border: 1px solid #555;
+    }
+
+/* Ensure tickets remain in their original color */
+/* Style for the logo container */
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #1E2A47; /* Dark background */
+    padding: 12px 25px;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Style for the logo text with gradient and shadow */
+.logo {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 30px; /* Larger size */
+    background: linear-gradient(to right, #1E90FF, #32CD32); /* Gradient from blue to green */
+    -webkit-background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    transition: transform 0.3s ease;
+}
+
+    /* Hover effects */
+    .logo:hover {
+        transform: scale(1.1); /* Slightly enlarge the logo */
+    }
+
+.stalk:hover {
+    color: #FF6347; /* Hover color for 'Stalk' */
+}
+
+.kpi:hover {
+    color: #FFD700; /* Hover color for 'KPi' */
+}
+
+/* Logo animation on page load */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    animation: fadeIn 1s ease-out;
+}
+
+/* Contact Button Styling */
+#contact-us-button {
+    height: 40px; /* Same height as the search bar */
+    padding: 8px 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    white-space: nowrap;
+
+
+
+
+
+
+
