@@ -92,12 +92,12 @@ CACHE_TIMEOUT = 3600  # 1 hour
 
 def fetch_kpi_data(request):
     symbol = request.GET.get('symbol')
-    print(symbol)
+    # print(symbol)
     if not symbol:
         return JsonResponse({"success": False, "error": "Symbol not provided."}, status=400)
 
     symbol = urllib.parse.unquote(symbol)
-    print(f"Symbol after decoding: {symbol}")
+    # print(f"Symbol after decoding: {symbol}")
 
     if "M&M" and "M&MFIN" in symbol:
         print("Handling M&M case directly.")
@@ -110,7 +110,7 @@ def fetch_kpi_data(request):
 
     # Convert to uppercase and remove spaces
     symbol = symbol.upper().replace(" ", "")
-    print(f"Symbol after converting to uppercase and removing spaces: {symbol}")    
+    # print(f"Symbol after converting to uppercase and removing spaces: {symbol}")    
     
     
   
@@ -127,7 +127,7 @@ def fetch_kpi_data(request):
     # Fetch stock data from Yahoo Finance
     stock = yf.Ticker(symbol)
     stock_history = stock.history(period="1y")
-    print(f"Data for {symbol}: {stock_history}")
+    # print(f"Data for {symbol}: {stock_history}")
 
     if stock_history.empty:
         return JsonResponse({'success': False, 'error': f"No data found for {symbol}."})
@@ -136,7 +136,7 @@ def fetch_kpi_data(request):
     company_info = stock.info
 
     # Print all stock info for debugging
-    print(f"Stock Info for {symbol}: {company_info}")
+    # print(f"Stock Info for {symbol}: {company_info}")
 
     # Prepare response data
     response_data = {}
@@ -269,13 +269,3 @@ def fetch_kpi_data(request):
 
     return JsonResponse({"success": True, **response_data})
 
-
-# def fetch_kpi_data(request):
-#     print("symbol==>",)
-#     symbol_ = request.GET.get('symbol')
-
-#     stock = yf.Ticker(symbol_)
-#     company_info = stock.info
-#     market_cap = company_info.get("marketCap", 0) / 10**7
-
-#     return JsonResponse({"success": True,"market_cap":market_cap})

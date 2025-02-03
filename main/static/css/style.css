@@ -67,9 +67,7 @@ header {
     margin-left: 10px;
     white-space: nowrap; /* Ensures text fits properly */
 }
-
-
-
+/* Contact Button Styling */
 
 /* Tickets Styling */
 .tickets-container {
@@ -78,7 +76,6 @@ header {
     margin-top: 20px;
     padding: 20px;
     width: 100%;
-  
 }
 
 /* Ticket Grid - Ensures No Extra Spacing */
@@ -108,6 +105,14 @@ header {
     position: relative;
     transition: all 0.3s ease-in-out;
 }
+#blank .card-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding: 100px;
+    text-align: center;
+}
+
 
     /* Glass Effect (Optional - Comment out if not needed) */
     .card.glass-effect {
@@ -135,6 +140,13 @@ header {
         mask-composite: exclude;
     }
 
+
+
+
+
+   
+
+
 /* Animated Entry */
 @keyframes fadeIn {
     from {
@@ -160,6 +172,7 @@ header {
     text-transform: uppercase;
 }
 
+
 /* Percentage Text Enhancement */
 .percentage-text {
     position: absolute;
@@ -171,76 +184,14 @@ header {
     font-size: 14px;
 }
 
+
+
+
 /* Dark Theme Adjustments */
 .dark-theme .card {
     background: linear-gradient(to bottom right, #1e3c72, #2a5298) !important; /* Darker theme gradient */
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
 }
-
-
-/*.tickets-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);  4 columns*/ 
-/*        gap: 10px;  #Spacing between tickets */
-    /*padding: 0px;*/
-/*    max-width: 1200px; 
-    width: 100%;
-    max-width: none;*/
-    /*box-sizing: border-box;
-    grid-auto-rows: 120px;*/
-    /*grid-gap: 0;*/
-/*}*/
-
-
-
-/* Ticket Card Styling */
-/*.card {
-    background-color: deepskyblue !important;*/ /* Ensure deep sky blue */
-    /*color: white !important;*/ /* Text should be white */
-    /*border-radius: 10px;
-    text-align: center !important;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);*/ /* Soft shadow */
-
-/*    display: flex;*/
-    /*flex-direction: column;
-    justify-content: center;*/ /* Vertically center the content */
-    /*align-items: center;*/ 
-
-    /*width: 100% ; Fixed width 
-    height: 60% !important  ;
-
-    box-sizing: border-box; 
-}*/
-
-/* Card Body Styling */
-/*.card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;*/
-    /*padding: 15px;*/ /* Ensure consistent padding inside card */
-    /*height: 100%;*/ /* Ensure card body fills the card height */
-/*}*/
-/*.card + .card {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}*/
-
-/* Title and Paragraph Styling */
-/*.card-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0;*/ /* Remove unwanted margin */
-    /*padding: 0;
-}
-
-.card p {
-    font-size: 14px;
-    margin-top: 5px;
-    margin: 0;*/ /* Remove unwanted margin */
-    /*padding: 0;
-}*/
-
 
 
 
@@ -319,7 +270,16 @@ header {
     animation: fadeIn 1s ease-out;
 }
 
-
+/* Contact Button Styling */
+#contact-us-button {
+    height: 40px; /* Same height as the search bar */
+    padding: 8px 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    white-space: nowrap;
 
 
 
